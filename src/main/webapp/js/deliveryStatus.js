@@ -1,9 +1,9 @@
 updateDetails();
-setInterval(updateDetails, 200);
+setInterval(updateDetails, 500);
 
 function updateDetails() {
   fetch(
-    "get-delivery?API=true&orderID=" + document.querySelector("#orderID").value
+    "get-specific-delivery?&orderID=" + document.querySelector("#orderID").value
   )
     .then((response) => response.json())
     .then((data) => {
@@ -24,6 +24,16 @@ function updateDetails() {
         case "Delivered":
           orderStatus = 4;
           break;
+        default:
+          orderStatus = -1;
+      }
+
+      if (orderStatus < 0) {
+        document.querySelector("#order-received-img").classList.add("hidden");
+      } else {
+        document
+          .querySelector("#order-received-img")
+          .classList.remove("hidden");
       }
 
       if (orderStatus < 2) {
@@ -44,5 +54,7 @@ function updateDetails() {
       document.querySelector("#order-suburb").innerHTML = data.suburb;
       document.querySelector("#order-state").innerHTML = data.state;
       document.querySelector("#order-postal").innerHTML = data.postal;
+      document.querySelector("#order-instructions").innerHTML =
+        data.instructions;
     });
 }

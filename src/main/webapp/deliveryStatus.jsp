@@ -52,9 +52,12 @@
                 <ul class="status">
                     <li>
                         <div class="check-icon">
-                            <img src="https://img.icons8.com/color/48/000000/checkmark--v1.png"/>
+                            <img 
+                                src="https://img.icons8.com/color/48/000000/checkmark--v1.png"
+                                id="order-received-img"
+                            />
                         </div>
-                        <b>Order received</b>
+                        <b>Order Received</b>
                     </li>
                     <li>
                         <div class="check-icon">
@@ -101,13 +104,17 @@
                         <td>Postal:</td>
                         <td id="order-postal"></td>
                     </tr>
+                    <tr>
+                        <td>Instruction:</td>
+                        <td id="order-instructions"></td>
+                    </tr>
                 </table>
                 <hr />
                 <div class="actions">
                     <form action="create-delivery" method="post">
                         <input type="hidden" name="order-to-update" value="<%= orderID %>" />
-                        <button type="submit" name="action" class="update-button" value="update">Update</button>
                         <button type="submit" name="action" class="delete-button" value="delete">Delete</button>
+                        <button type="submit" name="action" class="update-button" value="update">Update</button>
                     </form>
                 </div>
             </div>

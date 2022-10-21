@@ -1,11 +1,5 @@
 package controller.rms;
 
-import static org.mockito.Mockito.*;
-
-import java.sql.Connection;
-
-import static org.junit.Assert.assertEquals;
-
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.*;
 import model.Order;
@@ -14,11 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 
-import controller.CreateDelivery;
+import controller.CreateUpdateDelivery;
 import dao.DBManager;
 
 public class CreateDeliveryTest extends Mockito {
-    private CreateDelivery servlet;
+    private CreateUpdateDelivery servlet;
     private HttpServletRequest request;
     private HttpServletResponse response;
     private HttpSession session;
@@ -27,7 +21,7 @@ public class CreateDeliveryTest extends Mockito {
 
     @Before
     public void setUp() {
-        servlet = new CreateDelivery();
+        servlet = new CreateUpdateDelivery();
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         session = mock(HttpSession.class);
@@ -43,30 +37,37 @@ public class CreateDeliveryTest extends Mockito {
         verify(session, times(postal)).setAttribute("postalErr", "Invalid Postal Code, 4 digits");
     }
 
+    public void setParameters(String orderType, String orderID, Order order, String street, String suburb, String state, String postal, String instructions){
+        when(request.getParameter("order-type")).thenReturn(orderType);
+        when(request.getParameter("orderID")).thenReturn(orderID);
+        if (order != null){
+            when(manager.getOrder(order.getOrderID())).thenReturn(order);
+        }
+        when(request.getParameter("street")).thenReturn(street);
+        when(request.getParameter("suburb")).thenReturn(suburb);
+        when(request.getParameter("state")).thenReturn(state);
+        when(request.getParameter("postal")).thenReturn(postal);
+        when(request.getParameter("instructions")).thenReturn(instructions);
+    }
+
     // Test for Correct Information (valid orderID, state, postal code)
     @Test
     public void testCorrectInformation() throws Exception {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "9 Delhi Road", "North Ryde", "NSW", "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher(
-                "get-delivery?orderID=" + order.getOrderID())).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("deliveryStatus.jsp"))
+            .thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
                 "Testing");
 
         verify(manager, times(1)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("get-delivery?orderID=" + order.getOrderID());
+        verify(request, times(1)).setAttribute("orderID", order.getOrderID());
+        verify(request, times(1)).getRequestDispatcher("deliveryStatus.jsp");
         checkSession(0, 0, 0, 0, 0);
     }
 
@@ -76,16 +77,9 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(null);
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", null, order, "9 Delhi Road", "North Ryde", "NSW", "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
@@ -93,7 +87,7 @@ public class CreateDeliveryTest extends Mockito {
 
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(1, 0, 0, 0, 0);
     }
 
@@ -103,16 +97,9 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn("abcdef");
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", "abcdef", order, "9 Delhi Road", "North Ryde", "NSW", "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
@@ -120,7 +107,7 @@ public class CreateDeliveryTest extends Mockito {
 
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(1, 0, 0, 0, 0);
     }
 
@@ -130,16 +117,9 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(null);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), null, "9 Delhi Road", "North Ryde", "NSW", "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
@@ -147,7 +127,7 @@ public class CreateDeliveryTest extends Mockito {
 
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(1, 0, 0, 0, 0);
     }
 
@@ -157,23 +137,16 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "", "North Ryde", "NSW", "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
                 "Testing");
 
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 1, 0, 0, 0);
     }
 
@@ -183,23 +156,16 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn(null);
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, null, "North Ryde", "NSW", "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
                 "Testing");
 
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 1, 0, 0, 0);
     }
 
@@ -209,23 +175,16 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("");
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "9 Delhi Road", "", "NSW", "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
                 "Testing");
 
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 0, 1, 0, 0);
     }
 
@@ -235,23 +194,16 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn(null);
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "9 Delhi Road", null, "NSW", "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
                 "Testing");
 
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 0, 1, 0, 0);
     }
 
@@ -261,16 +213,9 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("ansl");
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "9 Delhi Road", "North Ryde", "ansl", "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
@@ -278,7 +223,7 @@ public class CreateDeliveryTest extends Mockito {
 
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 0, 0, 1, 0);
     }
 
@@ -288,16 +233,9 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("AAAAAA");
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "9 Delhi Road", "North Ryde", "AAAAAA", "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
@@ -305,7 +243,7 @@ public class CreateDeliveryTest extends Mockito {
 
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 0, 0, 1, 0);
     }
 
@@ -315,16 +253,9 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("");
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "9 Delhi Road", "North Ryde", "", "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
@@ -332,7 +263,7 @@ public class CreateDeliveryTest extends Mockito {
 
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 0, 0, 1, 0);
     }
 
@@ -342,16 +273,9 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn(null);
-        when(request.getParameter("postal")).thenReturn("2113");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "9 Delhi Road", "North Ryde", null, "2113", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
@@ -359,7 +283,7 @@ public class CreateDeliveryTest extends Mockito {
 
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 0, 0, 1, 0);
     }
 
@@ -369,16 +293,9 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn("abcd");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "9 Delhi Road", "North Ryde", "NSW", "abcd", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
@@ -386,7 +303,7 @@ public class CreateDeliveryTest extends Mockito {
 
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 0, 0, 0, 1);
     }
 
@@ -396,16 +313,9 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn("123456");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "9 Delhi Road", "North Ryde", "NSW", "123456", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
@@ -413,7 +323,7 @@ public class CreateDeliveryTest extends Mockito {
 
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 0, 0, 0, 1);
     }
 
@@ -423,16 +333,9 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn("");
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "9 Delhi Road", "North Ryde", "NSW", "", "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
@@ -440,7 +343,7 @@ public class CreateDeliveryTest extends Mockito {
 
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 0, 0, 0, 1);
     }
 
@@ -450,16 +353,9 @@ public class CreateDeliveryTest extends Mockito {
         when(request.getSession()).thenReturn(session);
         when(request.getSession().getAttribute("manager")).thenReturn(manager);
 
-        when(request.getParameter("order-type")).thenReturn("Delivery");
-        when(request.getParameter("orderID")).thenReturn(Integer.toString(order.getOrderID()));
-        when(manager.getOrder(order.getOrderID())).thenReturn(order);
-        when(request.getParameter("street")).thenReturn("9 Delhi Road");
-        when(request.getParameter("suburb")).thenReturn("North Ryde");
-        when(request.getParameter("state")).thenReturn("NSW");
-        when(request.getParameter("postal")).thenReturn(null);
-        when(request.getParameter("instructions")).thenReturn("Testing");
+        setParameters("Delivery", Integer.toString(order.getOrderID()), order, "9 Delhi Road", "North Ryde", "NSW", null, "Testing");
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
-        when(request.getRequestDispatcher("createDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
+        when(request.getRequestDispatcher("createUpdateDelivery.jsp")).thenReturn(mock(RequestDispatcher.class));
 
         servlet.doPost(request, response);
         Delivery delivery = new Delivery(order.getOrderID(), "9 Delhi Road", "North Ryde", "NSW", "2113", 55.55,
@@ -467,7 +363,7 @@ public class CreateDeliveryTest extends Mockito {
 
         when(manager.getDelivery(order.getOrderID())).thenReturn(null);
         verify(manager, times(0)).createDelivery(ArgumentMatchers.refEq(delivery));
-        verify(request).getRequestDispatcher("createDelivery.jsp");
+        verify(request, times(1)).getRequestDispatcher("createUpdateDelivery.jsp");
         checkSession(0, 0, 0, 0, 1);
     }
 }

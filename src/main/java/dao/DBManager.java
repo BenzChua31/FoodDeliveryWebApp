@@ -66,11 +66,11 @@ public class DBManager {
 
     // Order
     public Order getOrder(int orderID) {
-        System.out.println("Got here");
         try {
             ResultSet rs = st.executeQuery("SELECT * FROM db.Order WHERE Order_ID = " + orderID);
+            Order order = null;
             if (rs.next()) {
-                return new Order(
+                order = new Order(
                         rs.getInt("ORDER_ID"),
                         rs.getInt("CUSTOMER_ID"),
                         rs.getInt("RESTAURANT_ID"),
@@ -81,11 +81,12 @@ public class DBManager {
                         rs.getString("FOOD_INSTRUCTIONS"),
                         rs.getString("FOOD_FEEDBACK"));
             }
+            return order;
         } catch (Exception e) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
             System.out.println("Exception in getOrder() is: " + e);
+            return null;
         }
-        return null;
     }
 
     public ArrayList<Order> getOrdersByResID(int restaurantID) {
@@ -168,8 +169,9 @@ public class DBManager {
         } catch (Exception e) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
             System.out.println("Exception is: " + e);
+            return null;
         }
-        return null;
+
     }
 
     // Menu_Item
@@ -224,31 +226,40 @@ public class DBManager {
     public boolean updateDelivery(Delivery delivery) {
         try {
             st.executeUpdate("UPDATE DELIVERY SET " +
-                    "ORDER_ID = " + delivery.getOrderID() +
-                    ", DRIVER_ID = " + delivery.getDriverID() +
-                    ", DELIVERY_STREET = '" + delivery.getDeliveryStreet() +
-                    "', DELIVERY_SUBURB = '" + delivery.getDeliverySuburb() +
-                    "', DELIVERY_STATE = '" + delivery.getDeliveryState() +
-                    "', DELIVERY_POSTAL = '" + delivery.getDeliveryPostal() +
-                    "', DELIVERY_FEE = " + ((double) Math.round(delivery.getDeliveryFee() * 100) / 100) +
-                    ", DRIVER_RATING = " + delivery.getDriverRating() +
-                    ", DRIVER_INSTRUCTIONS = '" + delivery.getDriverInstructions() +
-                    "', DRIVER_TIP = " + delivery.getDriverTip() +
+                    "Delivery_ID = " + delivery.getDeliveryID() +
+                    ", ORDER_ID = " + delivery.getOrderID() +
+                    ", DRIVER_ID = " + (delivery.getDriverID() != 0 ? delivery.getDriverID() : "NULL") +
+                    ", DELIVERY_STREET = '" + delivery.getDeliveryStreet() + "'" +
+                    ", DELIVERY_SUBURB = '" + delivery.getDeliverySuburb() + "'" +
+                    ", DELIVERY_STATE = '" + delivery.getDeliveryState() + "'" +
+                    ", DELIVERY_POSTAL = '" + delivery.getDeliveryPostal() + "'" +
+                    (delivery.getDeliveryFee() != 0
+                            ? ", DELIVERY_FEE = " + ((double) Math.round(delivery.getDeliveryFee() * 100) / 100)
+                            : "")
+                    +
+                    (delivery.getDriverRating() != 0 ? ", DRIVER_RATING = " + delivery.getDriverRating() + "'" : "") +
+                    (delivery.getDriverInstructions() != null
+                            ? ", DRIVER_INSTRUCTIONS = '" + delivery.getDriverInstructions() + "'"
+                            : "")
+                    +
+                    (delivery.getDriverFeedback() != null
+                            ? ", Driver_Feedback = '" + delivery.getDriverFeedback() + "'"
+                            : "")
+                    +
+                    (delivery.getDriverTip() != 0.0 ? ", DRIVER_TIP = " + delivery.getDriverTip() : "") +
                     " WHERE DELIVERY_ID = " + delivery.getDeliveryID());
             return true;
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
             System.out.println("Exception is: " + e);
             return false;
         }
     }
 
-    public Delivery getDelivery(int orderID) {
+    public Delivery getDelivery(int deliveryID) {
         try {
-            ResultSet rs = st.executeQuery("SELECT * FROM DELIVERY WHERE ORDER_ID = " + orderID);
-            while (rs.next()) {
+            ResultSet rs = st.executeQuery("SELECT * FROM DELIVERY WHERE Delivery_ID = " + deliveryID);
+            if (rs.next()) {
                 Delivery delivery = new Delivery(
                         rs.getInt("DELIVERY_ID"),
                         rs.getInt("ORDER_ID"),
@@ -271,12 +282,93 @@ public class DBManager {
         return null;
     }
 
+    public Delivery getDeliveryByOrderID(int orderID) {
+        try {
+            ResultSet rs = st.executeQuery("SELECT * FROM DELIVERY WHERE ORDER_ID = " + orderID);
+            if (rs.next()) {
+                Delivery delivery = new Delivery(
+                        rs.getInt("DELIVERY_ID"),
+                        rs.getInt("ORDER_ID"),
+                        rs.getInt("DRIVER_ID"),
+                        rs.getString("DELIVERY_STREET"),
+                        rs.getString("DELIVERY_SUBURB"),
+                        rs.getString("DELIVERY_STATE"),
+                        rs.getString("DELIVERY_POSTAL"),
+                        rs.getFloat("DELIVERY_FEE"),
+                        rs.getInt("DRIVER_RATING"),
+                        rs.getString("DRIVER_INSTRUCTIONS"),
+                        rs.getString("DRIVER_FEEDBACK"),
+                        rs.getFloat("DRIVER_TIP"));
+                return delivery;
+            }
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception in getDeliveryByOrderID() is: " + e);
+        }
+        return null;
+    }
+
+    public ArrayList<Delivery> getDeliveriesByDriverID(int driverID) {
+        try {
+            ArrayList<Delivery> deliveries = new ArrayList<Delivery>();
+            ResultSet rs = st.executeQuery("SELECT * FROM Delivery " +
+                    " WHERE Driver_ID = " + driverID);
+            while (rs.next()) {
+                deliveries.add(new Delivery(
+                        rs.getInt("Delivery_ID"),
+                        rs.getInt("Order_ID"),
+                        rs.getInt("Driver_ID"),
+                        rs.getString("Delivery_Street"),
+                        rs.getString("Delivery_Suburb"),
+                        rs.getString("Delivery_State"),
+                        rs.getString("Delivery_Postal"),
+                        rs.getFloat("Delivery_Fee"),
+                        rs.getInt("Driver_Rating"),
+                        rs.getString("Driver_Instructions"),
+                        rs.getString("Driver_Feedback"),
+                        rs.getFloat("Driver_Tip")));
+            }
+            return deliveries;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception in getDeliveriesByDriverID() is: " + e);
+        }
+        return null;
+    }
+
+    public ArrayList<Delivery> getAvailableDeliveries() {
+        try {
+            ArrayList<Delivery> deliveries = new ArrayList<Delivery>();
+            ResultSet rs = st.executeQuery("SELECT * FROM Delivery WHERE Driver_ID IS NULL");
+            while (rs.next()) {
+                deliveries.add(new Delivery(
+                        rs.getInt("Delivery_ID"),
+                        rs.getInt("Order_ID"),
+                        rs.getInt("Driver_ID"),
+                        rs.getString("Delivery_Street"),
+                        rs.getString("Delivery_Suburb"),
+                        rs.getString("Delivery_State"),
+                        rs.getString("Delivery_Postal"),
+                        rs.getFloat("Delivery_Fee"),
+                        rs.getInt("Driver_Rating"),
+                        rs.getString("Driver_Instructions"),
+                        rs.getString("Driver_Feedback"),
+                        rs.getFloat("Driver_Tip")));
+            }
+            return deliveries;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception in getAvailableDeliveries() is: " + e);
+            return null;
+        }
+    }
+
     // Driver
-    public DeliveryDriver getDriver(User user) {
+    public DeliveryDriver getDriver(int userID) {
         try {
             ResultSet rs = st.executeQuery("SELECT * " +
                     "FROM Driver INNER JOIN User ON Driver.User_ID = User.UserID " +
-                    "WHERE Driver.User_ID = " + user.getUserID());
+                    "WHERE Driver.User_ID = " + userID);
             while (rs.next()) {
                 DeliveryDriver driver = new DeliveryDriver(
                         rs.getInt("User.UserID"),

@@ -9,12 +9,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.OrderItem;
-import model.Staff;
 
 import com.google.gson.Gson;
 
 import dao.*;
+import model.Staff;
+import model.OrderItem;
 import model.MenuItem;
 import model.Order;
 import java.sql.Connection;
@@ -22,7 +22,8 @@ import java.util.ArrayList;
 
 @WebServlet(name = "controller/GetOrder", value = "/get-order")
 public class GetOrder extends HttpServlet {
-    protected void processResquest(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         if (session.getAttribute("manager") == null) {
@@ -33,7 +34,7 @@ public class GetOrder extends HttpServlet {
         String auth = request.getHeader("Authorization");
         Staff staff = (Staff) session.getAttribute("staff" + auth);
         if (staff == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized User");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized User! Please try to login again");
             return;
         }
 
@@ -96,12 +97,6 @@ public class GetOrder extends HttpServlet {
                 }
             }
         }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processResquest(request, response);
     }
 
     private void createManager(HttpServletRequest request, HttpServletResponse response) {

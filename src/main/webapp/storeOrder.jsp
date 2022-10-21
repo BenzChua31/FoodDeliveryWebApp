@@ -8,6 +8,7 @@
         <link href="./css/storeOrder.css" rel="stylesheet" type="text/css" >
         <link href="./css/header.css" rel="stylesheet" type="text/css" >
         <script src="./js/storeOrder.js" defer></script>
+        <script src="./js/updateData.js" defer></script>
         <title>Delivery Status</title>
     </head>
     <body>
@@ -46,24 +47,26 @@
         </header>
                         
         <main>
-            <%-- <div class="grid-item" id="-orderID-">
-                <div class="order-header">
-                    <button class="order-cancel" onclick="cancelOrder(-orderID-)">Cancel</button> 
-                    <h3 class="order-no">Order -orderID-</h3>
-                    <button class="order-done" onclick="doneOrder(-orderID-)">Done</button> 
-                </div>
-                <table class="food-list">
-                    <tr>
-                        <td>
-                            -name-
-                            <br />
-                            &ensp;* -comment-
-                        </td>
-                        <td>x-quantity-</td>
-                    </tr>
-                </table>
-                <p class="instructions">-instructions-</p>
-            </div> --%>
+            <div>
+                <%-- <div class="grid-item" id="-orderID-">
+                    <div class="order-header">
+                        <button class="order-cancel" onclick="updateOrder(-orderID-, 'Cancel')">Cancel</button> 
+                        <h3 class="order-no">Order -orderID-</h3>
+                        <button class="order-done" onclick="updateOrder(-orderID-, 'Prepared')">Done</button> 
+                    </div>
+                    <table class="food-list">
+                        <tr>
+                            <td>
+                                -name-
+                                <br />
+                                &ensp;* -comment-
+                            </td>
+                            <td>x-quantity-</td>
+                        </tr>
+                    </table>
+                    <p class="instructions">-instructions-</p>
+                </div> --%>
+            </div>
         </main>
     </body>
 </html>
