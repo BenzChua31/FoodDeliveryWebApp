@@ -27,7 +27,6 @@ public class Customer {
     private LocalDate cardExpiration;
     private int cardPin;
     private String cardName;
-    private User user;
 
     public Customer(int userID, String firstName, String lastName, String password, String email, int phone, LocalDate dateOfBirth, int streetNumber, String streetName, int postcode, String state, String suburb, String country, boolean activated, int customerID, String cardNumber, LocalDate cardExpiration, int cardPin, String cardName) {
         this.userID = userID;
