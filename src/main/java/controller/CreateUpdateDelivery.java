@@ -97,7 +97,8 @@ public class CreateUpdateDelivery extends HttpServlet {
                 return;
             }
         }
-        request.setAttribute("orderID", order.getOrderID());
+        Delivery delivery = manager.getDeliveryByOrderID(order.getOrderID());
+        request.setAttribute("deliveryID", delivery.getDeliveryID());
         request.getRequestDispatcher("deliveryStatus.jsp").include(request, response);
     }
 

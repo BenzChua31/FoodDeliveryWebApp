@@ -12,17 +12,15 @@ import jakarta.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 
-import model.Delivery;
 import dao.*;
+import model.Delivery;
 import java.sql.Connection;
 
-@WebServlet(name = "controller/UpdateDelivery", value = "/update-delivery")
-public class UpdateDelivery extends HttpServlet {
-
+@WebServlet(name = "controller/DeleteDelivery", value = "/delete-delivery")
+public class DeleteDelivery extends HttpServlet {
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         HttpSession session = request.getSession();
         if (session.getAttribute("manager") == null) {
             createManager(request, response);
@@ -31,6 +29,7 @@ public class UpdateDelivery extends HttpServlet {
         Validator validator = new Validator();
 
         Delivery delivery = null;
+
         if (validator.isNumeric(request.getParameter("deliveryID"))) {
             delivery = manager.getDelivery(Integer.parseInt(request.getParameter("deliveryID")));
         }
@@ -40,29 +39,19 @@ public class UpdateDelivery extends HttpServlet {
             return;
         }
 
-        try {
-            if (validator.isNumeric(request.getParameter("driverID"))) {
-                delivery.setDriverID(Integer.parseInt(request.getParameter("driverID")));
-            } else if (request.getParameter("driverID").equalsIgnoreCase("null")) {
-                delivery.setDriverID(0);
-            }
-
-            String message = "";
-            if (manager.updateDelivery(delivery)) {
-                message = "Updated Delivery " + delivery.getDeliveryID() + " Successfully!";
-            } else {
-                message = "Failed to update Delivery " + delivery.getDeliveryID();
-            }
-            String json = new Gson().toJson(message);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            PrintWriter out = response.getWriter();
-            out.print(json);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            System.out.println("Exception is: " + e);
+        String message = "";
+        if (manager.deleteDelivery(delivery.getDeliveryID())) {
+            message = "Deleted Delivery " + delivery.getDeliveryID() + " Successfully!";
+        } else {
+            message = "Failed to delete Delivery " + delivery.getDeliveryID();
         }
+        String json = new Gson().toJson(message);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        out.print(json);
+        out.flush();
+        out.close();
     }
 
     private void createManager(HttpServletRequest request, HttpServletResponse response) {

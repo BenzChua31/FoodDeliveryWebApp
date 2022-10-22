@@ -10,14 +10,15 @@
         <link href="./css/deliveryStatus.css" rel="stylesheet" type="text/css" >
         <link href="./css/header.css" rel="stylesheet" type="text/css" >
         <script src="./js/deliveryStatus.js" defer></script>
+        <script src="./js/updateData.js" defer></script>
         <title>Delivery Status</title>
     </head>
     <body>
         <%
             User user = (User) session.getAttribute("user");
-            int orderID = (int) request.getAttribute("orderID");
+            int deliveryID = (int) request.getAttribute("deliveryID");
         %>
-        <input id="orderID" value="<%= orderID %>" type="hidden"/>
+        <input id="deliveryID" value="<%= deliveryID %>" type="hidden"/>
 
         <header>
             <div class="header-content">
@@ -47,7 +48,7 @@
         </header>
                         
         <main>
-            <h1>Order no <%= orderID %></h1>
+            <h1>Delivery no <%= deliveryID %></h1>
             <div class="delivery">
                 <ul class="status">
                     <li>
@@ -111,11 +112,8 @@
                 </table>
                 <hr />
                 <div class="actions">
-                    <form action="create-delivery" method="post">
-                        <input type="hidden" name="order-to-update" value="<%= orderID %>" />
-                        <button type="submit" name="action" class="delete-button" value="delete">Delete</button>
-                        <button type="submit" name="action" class="update-button" value="update">Update</button>
-                    </form>
+                    <button class="delete-button" onclick="deleteDelivery(<%= deliveryID %>)">Delete</button>
+                    <button class="update-button" href="createUpdateDelivery.jsp">Update</button>
                 </div>
             </div>
         </main>

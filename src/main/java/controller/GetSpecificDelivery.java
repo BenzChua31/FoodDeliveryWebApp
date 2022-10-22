@@ -9,7 +9,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import com.google.gson.Gson;
+
 import dao.*;
 import model.User;
 import model.DeliveryDriver;
@@ -29,18 +31,18 @@ public class GetSpecificDelivery extends HttpServlet {
         DBManager manager = (DBManager) session.getAttribute("manager");
         Validator validator = new Validator();
 
-        Order order = null;
+        Delivery delivery = null;
 
-        if (validator.isNumeric(request.getParameter("orderID"))) {
-            order = manager.getOrder(Integer.parseInt(request.getParameter("orderID")));
+        if (validator.isNumeric(request.getParameter("deliveryID"))) {
+            delivery = manager.getDelivery(Integer.parseInt(request.getParameter("deliveryID")));
         }
 
-        if (order == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Order not found!");
+        if (delivery == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Delivery not found!");
             return;
         }
 
-        Delivery delivery = manager.getDeliveryByOrderID(order.getOrderID());
+        Order order = manager.getOrder(delivery.getOrderID());
 
         Data data = new Data(order, delivery);
 

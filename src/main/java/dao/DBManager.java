@@ -9,10 +9,10 @@ import model.*;
 
 public class DBManager {
 
-    private Statement st;
+    private Connection conn;
 
     public DBManager(Connection conn) throws SQLException {
-        st = conn.createStatement();
+        this.conn = conn;
     }
 
     public void testAdder(String firstName, String lastName) {
@@ -52,6 +52,7 @@ public class DBManager {
 
     public boolean validStaffRes(int staffID, int restaurantID) {
         try {
+            Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(
                     "SELECT * FROM STAFF WHERE STAFF_ID = " + staffID + " AND RESTAURANT_ID = " + restaurantID);
             if (rs.next()) {
@@ -67,6 +68,7 @@ public class DBManager {
     // Order
     public Order getOrder(int orderID) {
         try {
+            Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM db.Order WHERE Order_ID = " + orderID);
             Order order = null;
             if (rs.next()) {
@@ -91,6 +93,7 @@ public class DBManager {
 
     public ArrayList<Order> getOrdersByResID(int restaurantID) {
         try {
+            Statement st = conn.createStatement();
             ArrayList<Order> orders = new ArrayList<Order>();
             ResultSet rs = st.executeQuery("SELECT * FROM db.Order " +
                     " WHERE Restaurant_ID = " + restaurantID +
@@ -117,6 +120,7 @@ public class DBManager {
 
     public boolean updateOrder(Order order) {
         try {
+            Statement st = conn.createStatement();
             st.executeUpdate("UPDATE db.Order SET" +
                     " Order_ID = " + order.getOrderID() + "," +
                     " Customer_ID = " + order.getCustomerID() + "," +
@@ -142,6 +146,7 @@ public class DBManager {
 
     public boolean deleteOrder(int orderID) {
         try {
+            Statement st = conn.createStatement();
             st.executeUpdate("DELETE db.Order, Order_Item" +
                     " FROM db.Order INNER JOIN Order_Item ON db.Order.Order_ID = Order_Item.Order_ID" +
                     " WHERE db.Order.Order_ID = " + orderID);
@@ -156,6 +161,7 @@ public class DBManager {
     // OrderItem
     public ArrayList<OrderItem> getOrderItems(int orderID) {
         try {
+            Statement st = conn.createStatement();
             ArrayList<OrderItem> orderItems = new ArrayList<OrderItem>();
             ResultSet rs = st.executeQuery("SELECT * FROM ORDER_ITEM WHERE ORDER_ID = " + orderID);
             while (rs.next()) {
@@ -177,6 +183,7 @@ public class DBManager {
     // Menu_Item
     public MenuItem getMenuItem(int itemID) {
         try {
+            Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM MENU_ITEM WHERE ITEM_ID = " + itemID);
             while (rs.next()) {
                 MenuItem menuItem = new MenuItem(
@@ -204,6 +211,7 @@ public class DBManager {
     // Delivery
     public boolean createDelivery(Delivery delivery) {
         try {
+            Statement st = conn.createStatement();
             st.executeUpdate(
                     "INSERT INTO DELIVERY(ORDER_ID, DRIVER_ID, DELIVERY_STREET, DELIVERY_SUBURB, DELIVERY_STATE, DELIVERY_POSTAL, DELIVERY_FEE, DRIVER_INSTRUCTIONS) VALUES ("
                             + delivery.getOrderID() + ", NULL, '"
@@ -225,6 +233,7 @@ public class DBManager {
 
     public boolean updateDelivery(Delivery delivery) {
         try {
+            Statement st = conn.createStatement();
             st.executeUpdate("UPDATE DELIVERY SET " +
                     "Delivery_ID = " + delivery.getDeliveryID() +
                     ", ORDER_ID = " + delivery.getOrderID() +
@@ -258,6 +267,7 @@ public class DBManager {
 
     public Delivery getDelivery(int deliveryID) {
         try {
+            Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM DELIVERY WHERE Delivery_ID = " + deliveryID);
             if (rs.next()) {
                 Delivery delivery = new Delivery(
@@ -284,6 +294,7 @@ public class DBManager {
 
     public Delivery getDeliveryByOrderID(int orderID) {
         try {
+            Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM DELIVERY WHERE ORDER_ID = " + orderID);
             if (rs.next()) {
                 Delivery delivery = new Delivery(
@@ -310,6 +321,7 @@ public class DBManager {
 
     public ArrayList<Delivery> getDeliveriesByDriverID(int driverID) {
         try {
+            Statement st = conn.createStatement();
             ArrayList<Delivery> deliveries = new ArrayList<Delivery>();
             ResultSet rs = st.executeQuery("SELECT * FROM Delivery " +
                     " WHERE Driver_ID = " + driverID);
@@ -338,6 +350,7 @@ public class DBManager {
 
     public ArrayList<Delivery> getAvailableDeliveries() {
         try {
+            Statement st = conn.createStatement();
             ArrayList<Delivery> deliveries = new ArrayList<Delivery>();
             ResultSet rs = st.executeQuery("SELECT * FROM Delivery WHERE Driver_ID IS NULL");
             while (rs.next()) {
@@ -363,9 +376,22 @@ public class DBManager {
         }
     }
 
+    public boolean deleteDelivery(int deliveryID) {
+        try {
+            Statement st = conn.createStatement();
+            st.executeUpdate("DELETE FROM Delivery WHERE Delivery_ID = " + deliveryID);
+            return true;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception in deleteDelivery() is: " + e);
+            return false;
+        }
+    }
+
     // Driver
     public DeliveryDriver getDriver(int userID) {
         try {
+            Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * " +
                     "FROM Driver INNER JOIN User ON Driver.User_ID = User.UserID " +
                     "WHERE Driver.User_ID = " + userID);
@@ -403,7 +429,7 @@ public class DBManager {
 
     // AppStaff Login - Benz
     public AppStaff appStaffLogin(String email, String pass) throws SQLException, Exception {
-        System.out.println("Got sql");
+        Statement st = conn.createStatement();
         ResultSet rs = st
                 .executeQuery("SELECT * FROM db.user U INNER JOIN db.appstaff A WHERE U.UserID = A.UserID AND " +
                         "Email ='" + email + "' AND Password='" + pass + "'");

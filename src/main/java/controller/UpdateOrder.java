@@ -89,6 +89,8 @@ public class UpdateOrder extends HttpServlet {
             String message = "";
             if (manager.updateOrder(order)) {
                 message = "Updated Order " + order.getOrderID() + " Successfully!";
+            } else {
+                message = "Failed to delete Order " + order.getOrderID();
             }
             String json = new Gson().toJson(message);
             response.setContentType("application/json");

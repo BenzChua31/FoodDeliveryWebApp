@@ -91,7 +91,12 @@ function updateDeliveries() {
                   <table>
                       <tr>
                           <td>Order Status:</td>
-                          <td id="order-status">${delivery.status}</td>
+                          <td id="order-status"
+                          ${
+                            delivery.status == "Cancelled"
+                              ? "class='warning-text'"
+                              : ""
+                          }>${delivery.status}</td>
                       </tr>
                       <tr>
                           <td>Street:</td>
@@ -201,7 +206,12 @@ function updateDeliveries() {
                   <table>
                       <tr>
                           <td>Order Status:</td>
-                          <td id="order-status">${delivery.status}</td>
+                          <td id="order-status" 
+                          ${
+                            delivery.status == "Cancelled"
+                              ? "class='warning-text'"
+                              : ""
+                          }>${delivery.status}</td>
                       </tr>
                       <tr>
                           <td>Street:</td>
@@ -275,14 +285,3 @@ function updateDeliveries() {
 //   }
 //   return "";
 // }
-
-function convertData(data) {
-  var formBody = [];
-  for (var property in data) {
-    var encodedKey = encodeURIComponent(property);
-    var encodedValue = encodeURIComponent(data[property]);
-    formBody.push(encodedKey + "=" + encodedValue);
-  }
-  formBody = formBody.join("&");
-  return formBody;
-}

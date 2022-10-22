@@ -44,7 +44,7 @@ function updateOrders() {
         orderCancel.setAttribute("class", "order-cancel");
         orderCancel.setAttribute(
           "onclick",
-          `updateOrderByOrderID(${order.orderID}, "Cancel");`
+          `updateOrderByOrderID(${order.orderID}, "Cancelled");`
         );
         orderCancel.innerHTML = "Cancel";
 
@@ -121,15 +121,4 @@ function getCookie(cname) {
     }
   }
   return "";
-}
-
-function convertData(data) {
-  var formBody = [];
-  for (var property in data) {
-    var encodedKey = encodeURIComponent(property);
-    var encodedValue = encodeURIComponent(data[property]);
-    formBody.push(encodedKey + "=" + encodedValue);
-  }
-  formBody = formBody.join("&");
-  return formBody;
 }

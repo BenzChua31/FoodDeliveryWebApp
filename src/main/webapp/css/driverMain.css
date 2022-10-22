@@ -106,6 +106,15 @@ hr {
   display: none;
 }
 
+#order-status {
+  font-weight: bold;
+  color: #40ff70;
+}
+
+.warning-text {
+  color: red;
+}
+
 .cancel-button,
 .done-button,
 .accept-button {

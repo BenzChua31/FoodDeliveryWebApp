@@ -3,7 +3,8 @@ setInterval(updateDetails, 500);
 
 function updateDetails() {
   fetch(
-    "get-specific-delivery?&orderID=" + document.querySelector("#orderID").value
+    "get-specific-delivery?&deliveryID=" +
+      document.querySelector("#deliveryID").value
   )
     .then((response) => response.json())
     .then((data) => {
@@ -49,6 +50,44 @@ function updateDetails() {
       }
 
       document.querySelector("#order-status").innerHTML = data.status;
+      if (data.status == "Cancelled") {
+        document.querySelector("#order-status").className = "warning-text";
+        document.querySelector(".update-button").setAttribute("disabled", "");
+      } else {
+        document.querySelector("#order-status").className = "";
+        document.querySelector(".update-button").removeAttribute("disabled");
+      }
+      if (data.status == "Delivering") {
+        document.querySelector(".delete-button").setAttribute("disabled", "");
+        document.querySelector(".update-button").setAttribute("disabled", "");
+      } else {
+        document.querySelector(".delete-button").removeAttribute("disabled");
+        document.querySelector(".update-button").removeAttribute("disabled");
+      }
+      if (data.status == "Delivered") {
+        document.querySelector(".update-button").setAttribute("disabled", "");
+      } else {
+        document.querySelector(".update-button").removeAttribute("disabled");
+      }
+      switch (data.status) {
+        case "Cancelled":
+          document.querySelector("#order-status").className = "warning-text";
+          document.querySelector(".update-button").setAttribute("disabled", "");
+          break;
+        case "Prepared":
+          document.querySelector(".delete-button").setAttribute("disabled", "");
+        case "Delivering":
+          document.querySelector(".delete-button").setAttribute("disabled", "");
+          document.querySelector(".update-button").setAttribute("disabled", "");
+          break;
+        case "Delivered":
+          document.querySelector(".update-button").setAttribute("disabled", "");
+          break;
+        default:
+          document.querySelector("#order-status").className = "";
+          document.querySelector(".delete-button").removeAttribute("disabled");
+          document.querySelector(".update-button").removeAttribute("disabled");
+      }
       document.querySelector("#order-type").innerHTML = data.type;
       document.querySelector("#order-street").innerHTML = data.street;
       document.querySelector("#order-suburb").innerHTML = data.suburb;
