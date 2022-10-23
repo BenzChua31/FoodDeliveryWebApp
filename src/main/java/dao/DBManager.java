@@ -40,7 +40,7 @@ public class DBManager {
        // fetch = "INSERT INTO db.user " + "VALUES (" + 000123 + ",'" + firstName + "', '" + lastName + "', '" + password + "', '" + email + "', '" + phoneNumber + "', '" + dob + "', '" + streetNumber + "', '" + streetName + "', '" + postcode + "', '" + state + "', '" + suburb + "', '" + country + "', " + 1 + ")";
        // System.out.println("made it to addUser in dbmanager");
         
-        fetch = "insert into db.user(first_name, last_name, password, email, phoneNo, dob, street_number, street_name, postcode, state, suburb, country, activated) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String fetch = "insert into db.user(first_name, last_name, password, email, phoneNo, dob, street_number, street_name, postcode, state, suburb, country, activated) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
  
         PreparedStatement ps = conn.prepareStatement(fetch);
         ps.setString(1, firstName);
@@ -70,6 +70,7 @@ public class DBManager {
     public Customer findCustomer(String Cemail, String Cpassword) throws SQLException {
 
         String fetch = "select * from db.user where email='" + Cemail + "' and Password= '" + Cpassword + "'";
+        Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(fetch);
         
         if (!rs.next()) {
@@ -124,7 +125,7 @@ public class DBManager {
     public void addPaymentDetails(int userID, int cardNumber, String cardExpiration, int cardPin, String cardName) throws SQLException {
         // find the user and get their user id 
 
-        fetch = "insert into db.customer(user_id, card_number, card_expiration, card_pin, card_name) values(?, ?, ?, ?, ?)";
+        String fetch = "insert into db.customer(user_id, card_number, card_expiration, card_pin, card_name) values(?, ?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(fetch);
         ps.setInt(1, userID);
         ps.setInt(2, cardNumber);
@@ -138,6 +139,7 @@ public class DBManager {
 
     public User findUser(String email, String password) throws SQLException{
         String fetch = "select * from db.user where email='" + email + "' and Password= '" + password + "'";
+        Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(fetch);
    
         while (rs.next()) {
@@ -172,7 +174,8 @@ public class DBManager {
     }
 
     public void addStaffDetails(String email, int restaurantID, int privilege, String position) throws SQLException{
-        fetch = "SELECT * FROM `User` WHERE Email='"+ email + "';";
+        String fetch = "SELECT * FROM `User` WHERE Email='"+ email + "';";
+        Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(fetch);
         rs.next();
         int userID = rs.getInt(1);
@@ -190,7 +193,8 @@ public class DBManager {
     public void addPaymentDetails(String email, String cardNumber, String cardExpiration, int cardPin, String cardName) throws SQLException {
         // find the user and get their user id 
         System.out.println(email + " is the email being passed into the addPaymentDetails method in manager");
-        fetch = "SELECT * FROM `User` WHERE Email='"+ email + "';";
+        String fetch = "SELECT * FROM `User` WHERE Email='"+ email + "';";
+        Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(fetch);
         rs.next();
         int userID = rs.getInt(1);
@@ -260,7 +264,7 @@ public class DBManager {
 */
     public void updateCustomer(int userID, String firstName, String lastName, String password, String email, String phone, String dateOfBirth, int streetNumber, String streetName, int postcode, String state, String suburb, String country, boolean activated, int customerID, int cardNumber, String cardExpiration, int cardPin, String cardName) throws SQLException {
         
-        fetch = "UPDATE db.user SET first_name = ?, last_name = ?, password = ?, email = ?, phoneNo = ?, dob = ?, street_number = ?, street_name = ?, postcode = ?, state = ?, suburb = ?, country = ?, activated = ? WHERE userID = ?";
+        String fetch = "UPDATE db.user SET first_name = ?, last_name = ?, password = ?, email = ?, phoneNo = ?, dob = ?, street_number = ?, street_name = ?, postcode = ?, state = ?, suburb = ?, country = ?, activated = ? WHERE userID = ?";
         PreparedStatement ps = conn.prepareStatement(fetch);
         ps.setString(1, firstName);
         ps.setString(2, lastName);
@@ -302,6 +306,7 @@ public class DBManager {
 
     public Customer findCustomer(int CuserID) throws SQLException {
         String fetch = "select * from db.user where UserID=" + CuserID;
+        Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(fetch);
    
         rs.next();
@@ -340,6 +345,7 @@ public class DBManager {
     public Staff findStaff(String Semail, String Spassword) throws SQLException {
 
         String fetch = "select * from db.user where email='" + Semail + "' and Password= '" + Spassword + "'";
+        Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(fetch);
    
         if (!rs.next()) {
@@ -394,7 +400,7 @@ public class DBManager {
 
     public void updateStaff(int userID, String firstName, String lastName, String password, String email, int phone, String dateOfBirth, int streetNumber, String streetName, int postcode, String state, String suburb, String country, boolean activated, int staffID, int restauranID, int privilege, String position) throws SQLException {
         
-        fetch = "UPDATE db.user SET first_name = ?, last_name = ?, password = ?, email = ?, phoneNo = ?, dob = ?, street_number = ?, street_name = ?, postcode = ?, state = ?, suburb = ?, country = ?, activated = ? WHERE userID = ?";
+        String fetch = "UPDATE db.user SET first_name = ?, last_name = ?, password = ?, email = ?, phoneNo = ?, dob = ?, street_number = ?, street_name = ?, postcode = ?, state = ?, suburb = ?, country = ?, activated = ? WHERE userID = ?";
         PreparedStatement ps = conn.prepareStatement(fetch);
         ps.setString(1, firstName);
         ps.setString(2, lastName);
@@ -435,6 +441,7 @@ public class DBManager {
     public Staff findStaff(int SuserID) throws SQLException {
 
         String fetch = "select * from db.user where UserID=" + SuserID;
+        Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(fetch);
    
         rs.next();
@@ -933,6 +940,7 @@ public class DBManager {
 
     public ArrayList<Restaurant> fectRestaraunt() throws SQLException {
         String fetch = "SELECT * FROM RESTAURANT";
+        Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(fetch);
         ArrayList<Restaurant> temp = new ArrayList();
 
@@ -958,6 +966,7 @@ public class DBManager {
 
     public ArrayList<MenuItem> fectMenuItem() throws SQLException {
         String fetch = "SELECT * FROM MENU_ITEM";
+        Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(fetch);
         ArrayList<MenuItem> temp = new ArrayList();
 
@@ -991,6 +1000,7 @@ public class DBManager {
         String insert = "INSERT INTO db.order(Customer_ID, Restaurant_ID, Order_Type, Status)";
         String values = "VALUES (" + customerID + ", "+ restaurantID+", '" + orderType + "', '" + status + "')";
         try {
+            Statement st = conn.createStatement();
             st.executeUpdate(insert + values);
             //Select from order where its the last row? rs.get(orderID)
             //insert = "SELECT Order_ID FROM db.Order ORDER BY Order_ID DESC LIMIT 1";
@@ -1015,6 +1025,7 @@ public class DBManager {
         //String fetch = "SELECT Order_ID FROM db.Order ORDER BY Order_ID DESC LIMIT 1";
         
         try {
+            Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT Order_ID FROM db.Order ORDER BY Order_ID DESC LIMIT 1");
             if (rs.next()) {
                 return rs.getInt("Order_ID");
@@ -1033,6 +1044,7 @@ public class DBManager {
         String insert = "INSERT INTO order_item(Order_ID, Item_ID, Quantity)";
         String values = "VALUES (" + orderID + ", " + itemID + ", " + quantity + ")";
         try {
+            Statement st = conn.createStatement();
             st.executeUpdate(insert + values);
             OrderItem orderItem = new OrderItem(orderID, itemID, quantity);
             return orderItem;
@@ -1045,6 +1057,7 @@ public class DBManager {
 
     public ArrayList<OrderItem> fectOrderItem(int orderID) throws SQLException {
         String fetch = "SELECT * FROM ORDER_ITEM WHERE Order_ID = '"+orderID+"'";
+        Statement st = conn.createStatement();
         ResultSet rs = st.executeQuery(fetch);
         ArrayList<OrderItem> temp = new ArrayList();
 
@@ -1062,6 +1075,7 @@ public class DBManager {
     public void removeOrderItem(int orderID, int itemID){
         String insert = "DELETE FROM ORDER_ITEM WHERE Order_ID = '"+orderID+"' AND Item_ID= '"+itemID+"'" ;
         try {
+            Statement st = conn.createStatement();
             st.executeUpdate(insert);
         }
         catch (Exception e) {
@@ -1074,6 +1088,7 @@ public class DBManager {
 
         //String insert = "DELETE FROM ORDER WHERE Order_ID = '"+orderID+"' AND Item_ID= '"+itemID+"'" ;
         try {
+            Statement st = conn.createStatement();
             st.executeUpdate(insert);
         }
         catch (Exception e) {
@@ -1083,6 +1098,7 @@ public class DBManager {
         insert = "DELETE FROM DB.ORDER WHERE ORDER_ID = '"+orderID+"'";
 
         try {
+            Statement st = conn.createStatement();
             st.executeUpdate(insert);
         }
         catch (Exception e) {
