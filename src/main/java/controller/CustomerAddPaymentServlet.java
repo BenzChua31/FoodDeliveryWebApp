@@ -70,7 +70,7 @@ public class CustomerAddPaymentServlet extends HttpServlet{
                 manager.addPaymentDetails(user.getUserID(), cardNumber, cardExpiration, cardPin, cardName);
                 Customer customer = manager.findCustomer(user.getUserID());
                 session.setAttribute("Customer", customer);
-                request.getRequestDispatcher("main.jsp").include(request, response);
+                request.getRequestDispatcher("index.jsp").include(request, response);
             }
             catch (NullPointerException ex) {
                 ex.printStackTrace();

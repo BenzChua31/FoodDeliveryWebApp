@@ -85,7 +85,7 @@ public class StaffEditDetails extends HttpServlet{
             manager.updateStaff(staff.getUserID(), firstName, lastName, password, email, phoneNumber, dob, streetNumber, streetName, postcode, state, suburb, country, true, staff.getStaffID(), restaurantID, privilege, position);
             staff = manager.findStaff(staff.getUserID());
             session.setAttribute("Staff", staff);
-            request.getRequestDispatcher("staffMain.jsp").include(request, response);
+            request.getRequestDispatcher("index.jsp").include(request, response);
         }
         catch (NullPointerException ex) {
             ex.printStackTrace();

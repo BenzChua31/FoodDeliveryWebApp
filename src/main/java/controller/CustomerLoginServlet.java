@@ -48,7 +48,7 @@ public class CustomerLoginServlet extends HttpServlet{
                 System.out.println("Customer Found");
                 Customer customer = manager.findCustomer(email, password);
                 session.setAttribute("Customer", customer);              
-                request.getRequestDispatcher("main.jsp").include(request, response);
+                request.getRequestDispatcher("index.jsp").include(request, response);
             }
             else {
                 System.out.println("Customer Not Found");

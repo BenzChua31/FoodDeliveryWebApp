@@ -76,6 +76,14 @@ public class Customer {
         this.firstName = firstName;
     }
 
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public Integer getCustomerId() {
         return customerID;
     }
@@ -83,7 +91,10 @@ public class Customer {
     public void setCustomerId(Integer customerId) {
         this.customerID = customerId;
     }
-
+    
+    public String getEmail() {
+        return email;
+    }
     public void setEmail(String email) {
         this.email = email;
     }

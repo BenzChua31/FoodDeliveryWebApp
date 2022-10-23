@@ -49,7 +49,7 @@ public class StaffLoginServlet extends HttpServlet{
                 Staff staff = manager.findStaff(email, password);
                 session.setAttribute("Staff", staff);  
                 System.out.println(staff.getFname() + " is the first name from session staff")            ;
-                request.getRequestDispatcher("staffMain.jsp").include(request, response);
+                request.getRequestDispatcher("index.jsp").include(request, response);
             }
             else {
                 System.out.println("Customer Not Found");

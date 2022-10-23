@@ -83,6 +83,6 @@
                 <input type ="submit" value="Update Details">
             </div>    
         </form>
-        <a href="./staffMain.jsp">Back to Main Page</a>
+        <a href="./index.jsp">Back to Main Page</a>
     </body>
 </html>
