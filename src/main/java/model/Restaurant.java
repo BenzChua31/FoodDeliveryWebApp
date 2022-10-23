@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Restaurant {
 
-    private final int restaurantID;
+    private int restaurantID;
     private String imageReference;
     private String restaurantName;
     private ArrayList<RCategory> categories;
@@ -15,10 +15,12 @@ public class Restaurant {
     private String suburb;
     private String country;
     private Boolean activate;
-    private final long abn;
+    private long abn;
     private String accountName;
     private int bsb;
     private int accountNum;
+
+    public Restaurant(){}
 
     // For DBManager to use to fill in info + categories and passed to the controller fo use.
     public Restaurant(int restaurantID, String imageReference, String restaurantName,
