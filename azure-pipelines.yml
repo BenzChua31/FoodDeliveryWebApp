@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-  - main
+  - CouponSystem
 
 pool:
   vmImage: ubuntu-latest
@@ -12,18 +12,12 @@ pool:
 steps:
   - task: Maven@3.205.1
     inputs:
-      mavenPomFile: "pom.xml"
-      mavenOptions: "-Xmx3072m"
-      javaHomeOption: "JDKVersion"
-      jdkVersionOption: "17.0.4"
-      jdkArchitectureOption: "x64"
-      testRunTitle: "Test Run"
+      mavenPomFile: 'pom.xml'
+      mavenOptions: '-Xmx3072m'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.8'
+      jdkArchitectureOption: 'x64'
+      testRunTitle: 'Test Run'
       publishJUnitResults: true
-      testResultsFiles: "**/surefire-reports/TEST-*.xml"
-      goals: "package"
-  - task: AzureWebApp@1
-    inputs:
-      appType: 'webApp'
-      appName: 'FDS'
-      package: '$(System.DefaultWorkingDirectory)/**/*.zip'
-      deploymentMethod: 'auto'
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      goals: 'package'
