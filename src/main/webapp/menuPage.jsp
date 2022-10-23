@@ -17,7 +17,7 @@
     <meta name="theme-color" content="#478ac9">
 
  <%
-    Staff staff = (Staff) session.getAttribute("staff");
+    Staff loginedStaff = (Staff) session.getAttribute("staff");
       MenuManagement me = staff.GetMenuManagement();
       List<Menu> menus = me.GetAllMenus();
       List<MenuCategory> categories = me.GetAllCategories();
