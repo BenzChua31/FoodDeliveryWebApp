@@ -88,13 +88,13 @@
                         <input type="text" id="suburb" name="suburb" required>
                         <label for="state">State
                             <% if (session.getAttribute("stateErr") != null) {%>
-                                <span class="warning-text"><%=session.getAttribute("stateErr")%></span>
+                                <span class="warning-text"><%= session.getAttribute("stateErr") %></span>
                             <% } %>
                         </label>
                         <input type="text" id="state" name="state" required>
                         <label for="postal">Postal Code
                             <% if (session.getAttribute("postalErr") != null) {%>
-                                <span class="warning-text"><%=session.getAttribute("postalErr")%></span>
+                                <span class="warning-text"><%= session.getAttribute("postalErr") %></span>
                             <% }%>
                         </label>
                         <input type="text" id="postal" name="postal" required>

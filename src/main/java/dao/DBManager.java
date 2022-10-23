@@ -65,6 +65,43 @@ public class DBManager {
         return false;
     }
 
+    public Staff getStaff(int userID) {
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * " +
+                    "FROM Staff INNER JOIN User ON Staff.UserID = User.UserID " +
+                    "WHERE Staff.UserID = " + userID);
+            Staff staff = null;
+            if (rs.next()) {
+                staff = new Staff(
+                        rs.getInt("Staff.UserID"),
+                        rs.getString("User.First_Name"),
+                        rs.getString("User.Last_Name"),
+                        rs.getString("User.Password"),
+                        rs.getString("User.Email"),
+                        rs.getInt("User.PhoneNo"),
+                        rs.getDate("User.DOB"),
+                        rs.getInt("User.Street_Number"),
+                        rs.getString("User.Street_Name"),
+                        rs.getInt("User.Postcode"),
+                        rs.getString("User.State"),
+                        rs.getString("User.Suburb"),
+                        rs.getString("User.Country"),
+                        rs.getBoolean("User.Activated"),
+                        rs.getInt("Staff.Staff_ID"),
+                        rs.getInt("Staff.Restaurant_ID"),
+                        rs.getInt("Staff.Privilege"),
+                        rs.getString("Staff.Position"));
+
+            }
+            return staff;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception is: " + e);
+            return null;
+        }
+    }
+
     // Order
     public Order getOrder(int orderID) {
         try {
@@ -246,7 +283,7 @@ public class DBManager {
                             ? ", DELIVERY_FEE = " + ((double) Math.round(delivery.getDeliveryFee() * 100) / 100)
                             : "")
                     +
-                    (delivery.getDriverRating() != 0 ? ", DRIVER_RATING = " + delivery.getDriverRating() + "'" : "") +
+                    (delivery.getDriverRating() != 0 ? ", DRIVER_RATING = " + delivery.getDriverRating() : "") +
                     (delivery.getDriverInstructions() != null
                             ? ", DRIVER_INSTRUCTIONS = '" + delivery.getDriverInstructions() + "'"
                             : "")
@@ -395,8 +432,9 @@ public class DBManager {
             ResultSet rs = st.executeQuery("SELECT * " +
                     "FROM Driver INNER JOIN User ON Driver.User_ID = User.UserID " +
                     "WHERE Driver.User_ID = " + userID);
-            while (rs.next()) {
-                DeliveryDriver driver = new DeliveryDriver(
+            DeliveryDriver driver = null;
+            if (rs.next()) {
+                driver = new DeliveryDriver(
                         rs.getInt("User.UserID"),
                         rs.getString("User.First_Name"),
                         rs.getString("User.Last_Name"),
@@ -414,17 +452,50 @@ public class DBManager {
                         rs.getInt("Driver.Driver_ID"),
                         rs.getString("NUMBER_PLATE"),
                         rs.getString("VEHICLE_DESCRIPTION"),
-                        rs.getFloat("RATING"),
                         rs.getString("D_ACCOUNT_NAME"),
                         rs.getInt("D_BSB"),
                         rs.getInt("D_ACCOUNT_NUMBER"));
-                return driver;
             }
+            return driver;
         } catch (Exception e) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
             System.out.println("Exception is: " + e);
+            return null;
         }
-        return null;
+    }
+
+    public double getDriverRating(int driverID) {
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st
+                    .executeQuery("SELECT AVG(Driver_Rating) FROM Delivery WHERE Delivery.Driver_ID = " + driverID);
+            if (rs.next()) {
+                return rs.getDouble("AVG(Driver_Rating)");
+            }
+            return 0;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception is: " + e);
+            return 0;
+        }
+    }
+
+    // Restaurent
+    public double getResRating(int restaurantID) {
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st
+                    .executeQuery(
+                            "SELECT AVG(Food_Rating) FROM db.Order WHERE db.Order.Restaurant_ID = " + restaurantID);
+            if (rs.next()) {
+                return rs.getDouble("AVG(Food_Rating)");
+            }
+            return 0;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception is: " + e);
+            return 0;
+        }
     }
 
     // AppStaff Login - Benz

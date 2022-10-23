@@ -1,6 +1,6 @@
+<%@page import="dao.DBManager"%>
 <%@page import="model.User"%>
 <%@page import="model.DeliveryDriver"%>
-<%@page import="dao.DBManager"%>
 <%@page import="model.Order"%>
 <%@page import="model.Delivery"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -22,7 +22,8 @@
 
             User user = (User) session.getAttribute("user");
             DBManager manager = (DBManager) session.getAttribute("manager");
-            DeliveryDriver driver = (DeliveryDriver) manager.getDriver(user.getUserID());
+            DeliveryDriver driver = manager.getDriver(user.getUserID());
+            double rating = manager.getDriverRating(driver.getDriverID());
             session.setAttribute("driver", driver);
         %>
         <input type="hidden" id="driver-no" value="<%= driver.getDriverID() %>">
@@ -39,7 +40,7 @@
                             <span>Hello, <%= driver.getFname()%></span>
                             <div class="user-menu">
                                 <a class="header-button" href="">View Account Details</a>
-                                <a class="header-button" href="">View Orders</a>
+                                <a class="header-button" href="driverReview.jsp">View Reviews</a>
                                 <a class="header-button" href="">Logout</a>
                             </div>
                         <% } else { %>
@@ -80,7 +81,7 @@
                     </tr>
                     <tr>
                         <td>Rating:</td>
-                        <td><%= driver.getRating() %></td>
+                        <td><%= String.format("%,.1f", rating) %></td>
                     </tr>
                     <tr>
                         <td>Bank Account Name:</td>
@@ -154,6 +155,10 @@
                                     <td>Postal:</td>
                                     <td id="delivery-postal"></td>
                                 </tr>
+                                <tr>
+                                    <td>Instruction:</td>
+                                    <td id="driver-instructions"></td>
+                                </tr>
                             </table>
                             <hr />
                             <div class="actions">
@@ -223,6 +228,10 @@
                                 <tr>
                                     <td>Postal:</td>
                                     <td id="delivery-postal"></td>
+                                </tr>
+                                <tr>
+                                    <td>Instruction:</td>
+                                    <td id="driver-instructions"></td>
                                 </tr>
                             </table>
                             <hr />

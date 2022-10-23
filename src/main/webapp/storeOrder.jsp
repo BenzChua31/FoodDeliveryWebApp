@@ -1,4 +1,6 @@
+<%@page import="dao.DBManager"%>
 <%@page import="model.Staff"%>
+<%@page import="model.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,9 +16,17 @@
     <body>
         <%
             // for testing
-            session.setAttribute("staffeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXNzYWdlIjoiSldUIFJ1bGVzISIsImlhdCI6MTQ1OTQ0ODExOSwiZXhwIjoxNDU5NDU0NTE5fQ.-yIVBD5b73C75osbmwwshQNRC7frWUYrqaTjTpza2y4", new Staff(989898, "Minh Quan", "Tran", "ABC", "ASLDA", 12131, null, 131, "141", 1341, "SAD", "RLQK", "ASDKLJ", true, 123123, 303030, 1, ""));
+            // session.setAttribute("staffeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXNzYWdlIjoiSldUIFJ1bGVzISIsImlhdCI6MTQ1OTQ0ODExOSwiZXhwIjoxNDU5NDU0NTE5fQ.-yIVBD5b73C75osbmwwshQNRC7frWUYrqaTjTpza2y4", new Staff(989898, "Minh Quan", "Tran", "ABC", "ASLDA", 12131, null, 131, "141", 1341, "SAD", "RLQK", "ASDKLJ", true, 123123, 303030, 1, ""));
 
-            Staff staff = (Staff) session.getAttribute("staffeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXNzYWdlIjoiSldUIFJ1bGVzISIsImlhdCI6MTQ1OTQ0ODExOSwiZXhwIjoxNDU5NDU0NTE5fQ.-yIVBD5b73C75osbmwwshQNRC7frWUYrqaTjTpza2y4");
+            // Staff staff = (Staff) session.getAttribute("staffeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXNzYWdlIjoiSldUIFJ1bGVzISIsImlhdCI6MTQ1OTQ0ODExOSwiZXhwIjoxNDU5NDU0NTE5fQ.-yIVBD5b73C75osbmwwshQNRC7frWUYrqaTjTpza2y4");
+
+            // for testing
+            session.setAttribute("user", new User(989898, "Minh Quan", "Tran"));
+
+            User user = (User) session.getAttribute("user");
+            DBManager manager = (DBManager) session.getAttribute("manager");
+            Staff staff = manager.getStaff(user.getUserID());
+            session.setAttribute("staff", staff);
         %>
 
         <header>
@@ -31,7 +41,7 @@
                             <span>Hello, <%= staff.getFname()%></span>
                             <div class="user-menu">
                                 <a class="header-button" href="">View Account Details</a>
-                                <a class="header-button" href="">View Orders</a>
+                                <a class="header-button" href="storeReview.jsp">View Reviews</a>
                                 <a class="header-button" href="">Logout</a>
                             </div>
                         <% } else { %>

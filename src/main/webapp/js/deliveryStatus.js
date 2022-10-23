@@ -69,6 +69,12 @@ function updateDetails() {
       } else {
         document.querySelector(".update-button").removeAttribute("disabled");
       }
+
+      document.querySelector("#order-status").className = "";
+      document.querySelector(".delete-button").removeAttribute("disabled");
+      document.querySelector(".update-button").removeAttribute("disabled");
+      document.querySelector(".update-button").style.display = "initial";
+      document.querySelector(".review-button").style.display = "none";
       switch (data.status) {
         case "Cancelled":
           document.querySelector("#order-status").className = "warning-text";
@@ -81,13 +87,11 @@ function updateDetails() {
           document.querySelector(".update-button").setAttribute("disabled", "");
           break;
         case "Delivered":
-          document.querySelector(".update-button").setAttribute("disabled", "");
+          document.querySelector(".update-button").style.display = "none";
+          document.querySelector(".review-button").style.display = "block";
           break;
-        default:
-          document.querySelector("#order-status").className = "";
-          document.querySelector(".delete-button").removeAttribute("disabled");
-          document.querySelector(".update-button").removeAttribute("disabled");
       }
+
       document.querySelector("#order-type").innerHTML = data.type;
       document.querySelector("#order-street").innerHTML = data.street;
       document.querySelector("#order-suburb").innerHTML = data.suburb;

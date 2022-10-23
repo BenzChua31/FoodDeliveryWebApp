@@ -48,6 +48,12 @@ public class CreateUpdateDelivery extends HttpServlet {
             return;
         }
 
+        if (order.getStatus().equals("Delivering")) {
+            session.setAttribute("orderErr", "Order delivering");
+            request.getRequestDispatcher("createUpdateDelivery.jsp").include(request, response);
+            return;
+        }
+
         order.setOrderType(orderType);
 
         boolean passed = true;

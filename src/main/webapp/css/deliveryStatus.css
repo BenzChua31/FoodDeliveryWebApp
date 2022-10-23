@@ -74,7 +74,8 @@ hr {
   color: red;
 }
 
-.update-button {
+.update-button,
+.review-button {
   position: relative;
   background-color: #505050;
   border: none;
@@ -84,7 +85,12 @@ hr {
   cursor: pointer;
 }
 
-.update-button:after {
+.review-button {
+  display: none;
+}
+
+.update-button:after,
+.review-button:after {
   content: "";
   position: absolute;
   bottom: 0px;
@@ -95,8 +101,18 @@ hr {
   transition: all 0.3s;
 }
 
-.update-button:hover:after {
+.update-button:hover:after,
+.review-button:hover:after {
   width: 100%;
+}
+
+.update-button:disabled {
+  color: grey;
+  cursor: not-allowed;
+}
+
+.update-button:disabled:hover:after {
+  width: 0;
 }
 
 .delete-button {
@@ -128,4 +144,9 @@ hr {
 
 .delete-button:hover:after {
   width: 100%;
+}
+
+.update-button:disabled {
+  color: grey;
+  cursor: not-allowed;
 }

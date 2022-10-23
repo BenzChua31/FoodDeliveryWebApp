@@ -120,7 +120,11 @@ function updateDeliveries() {
                       <tr>
                         <td>Instruction:</td>
                         <td id="driver-instructions">
-                        ${delivery.instruction}</td>
+                        ${
+                          delivery.instruction != null
+                            ? delivery.instruction
+                            : ""
+                        }</td>
                       </tr>
                   </table>
                   <hr />
@@ -231,6 +235,15 @@ function updateDeliveries() {
                           <td>Postal:</td>
                           <td id="delivery-postal">
                           ${delivery.postal}</td>
+                      </tr>
+                      <tr>
+                        <td>Instruction:</td>
+                        <td id="driver-instructions">
+                        ${
+                          delivery.instruction != null
+                            ? delivery.instruction
+                            : ""
+                        }</td>
                       </tr>
                   </table>
                   <hr />

@@ -31,12 +31,15 @@ public class GetOrder extends HttpServlet {
         }
         DBManager manager = (DBManager) session.getAttribute("manager");
 
-        String auth = request.getHeader("Authorization");
-        Staff staff = (Staff) session.getAttribute("staff" + auth);
-        if (staff == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized User! Please try to login again");
-            return;
-        }
+        // String auth = request.getHeader("Authorization");
+        // Staff staff = (Staff) session.getAttribute("staff" + auth);
+        // if (staff == null) {
+        // response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized User!
+        // Please try to login again");
+        // return;
+        // }
+
+        Staff staff = (Staff) session.getAttribute("staff");
 
         try {
             ArrayList<Order> orders = manager.getOrdersByResID(staff.getRestaurantID());

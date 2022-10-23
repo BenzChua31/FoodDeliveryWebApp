@@ -114,6 +114,10 @@
                 <div class="actions">
                     <button class="delete-button" onclick="deleteDelivery(<%= deliveryID %>)">Delete</button>
                     <button class="update-button" href="createUpdateDelivery.jsp">Update</button>
+                    <form action="prepare-review" method="POST">
+                        <input type="hidden" name="deliveryID" value="<%= deliveryID %>"/>
+                        <button type="submit" class="review-button">Review</button>
+                    </form>
                 </div>
             </div>
         </main>
