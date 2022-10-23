@@ -32,6 +32,23 @@ public class Order {
         this.status = status;
     }
 
+    public Order(int customerID, String orderType, int couponID, String status, int foodRating, String foodInstructions, String foodFeedback){
+        this.customerID = customerID;
+        this.orderType = orderType;
+        this.couponID = couponID;
+        this.status = status;
+        this.foodRating = foodRating;
+        this.foodInstructions = foodInstructions;
+        this.foodFeedback = foodFeedback;
+    }
+
+    public Order(int orderID, int customerID, String orderType, String status) {
+        this.orderID = orderID;
+        this.customerID = customerID;
+        this.orderType = orderType;
+        this.status = status;
+    }
+
     public int getOrderID() {
         return orderID;
     }
