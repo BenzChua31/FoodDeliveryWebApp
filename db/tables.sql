@@ -153,7 +153,7 @@ CREATE TABLE Coupon_Item
     Coupon_ID INT NOT NULL,
     Item_ID INT NOT NULL,
     PRIMARY KEY (Coupon_ID, Item_ID),
-    FOREIGN KEY (Coupon_ID) REFERENCES Coupon(Coupon_ID),
+    FOREIGN KEY (Coupon_ID) REFERENCES Coupon(Coupon_ID) ON DELETE CASCADE,
     FOREIGN KEY (Item_ID) REFERENCES Menu_Item(Item_ID)
 );
 
@@ -181,7 +181,7 @@ CREATE TABLE Coupon_Batch
     Distribution_Time TIMESTAMP NOT NULL,
     User_ID INT UNSIGNED NOT NULL,
     Receive_Num INT NOT NULL,
-    FOREIGN KEY (Coupon_ID) REFERENCES Coupon(Coupon_ID),
+    FOREIGN KEY (Coupon_ID) REFERENCES Coupon(Coupon_ID) ON DELETE CASCADE,
     FOREIGN KEY (D_Rule_ID) REFERENCES Distribution_Rule(D_Rule_ID),
     FOREIGN KEY (User_ID) REFERENCES `User`(UserID)
 );
@@ -194,7 +194,7 @@ CREATE TABLE C_Batch_Customer
     Coupon_Status INT NOT NULL,
     Receive_Date TIMESTAMP NOT NULL,
     PRIMARY KEY (C_Batch_ID, Customer_ID),
-    FOREIGN KEY (C_Batch_ID) REFERENCES Coupon_Batch(C_Batch_ID),
+    FOREIGN KEY (C_Batch_ID) REFERENCES Coupon_Batch(C_Batch_ID) ON DELETE CASCADE,
     FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
 );
 
@@ -204,7 +204,7 @@ CREATE TABLE Coupon_R
     Coupon_ID INT NOT NULL,
     Restaurant_ID INT UNSIGNED NOT NULL,
     PRIMARY KEY (Coupon_ID, Restaurant_ID),
-    FOREIGN KEY (Coupon_ID) REFERENCES Coupon(Coupon_ID),
+    FOREIGN KEY (Coupon_ID) REFERENCES Coupon(Coupon_ID) ON DELETE CASCADE,
     FOREIGN KEY (Restaurant_ID) REFERENCES Restaurant(Restaurant_ID)
 );
 
@@ -271,7 +271,7 @@ CREATE TABLE Order_Item
     FOREIGN KEY (Order_ID) REFERENCES db.Order(Order_ID),
     FOREIGN KEY (Item_ID) REFERENCES Menu_Item(Item_ID)
 );
-
+/*
 --For testing
 INSERT INTO USER VALUES(989898, "MINH QUAN", "TRAN", "ABC", "ASLDA", 12131, NULL, 131, "141", 1341, "SAD", "RLQK", "ASDKLJ", 1);
 INSERT INTO CUSTOMER VALUES(202020, 989898, NULL, NULL, NULL, NULL);
@@ -285,4 +285,4 @@ INSERT INTO DB.ORDER VALUES(111111, 202020, 303030, "Delivery", NULL, "Preparing
 
 
 INSERT INTO ORDER_ITEM VALUES(111111, 321321, 2, "No Chili");
-INSERT INTO DRIVER VALUES(454545, 989898, "AXY562", "Black Toyota", NULL, "CommBank", 117268, 45128935);
+INSERT INTO DRIVER VALUES(454545, 989898, "AXY562", "Black Toyota", NULL, "CommBank", 117268, 45128935);*/
