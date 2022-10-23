@@ -13,7 +13,14 @@ function updateOrders() {
       Authorization: getCookie("access_token"),
     },
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      return response.text().then((text) => {
+        throw new Error(text);
+      });
+    })
     .then((data) => {
       //console.log(data);
 
@@ -35,7 +42,10 @@ function updateOrders() {
 
         let orderCancel = document.createElement("button");
         orderCancel.setAttribute("class", "order-cancel");
-        orderCancel.setAttribute("onclick", `cancalOrder(${order.orderID});`);
+        orderCancel.setAttribute(
+          "onclick",
+          `updateOrderByOrderID(${order.orderID}, "Cancelled");`
+        );
         orderCancel.innerHTML = "Cancel";
 
         let orderNo = document.createElement("h3");
@@ -45,10 +55,16 @@ function updateOrders() {
         let orderDone = document.createElement("button");
         orderDone.setAttribute("class", "order-done");
         if (order.status == "Order Received") {
-          orderDone.setAttribute("onclick", `acceptOrder(${order.orderID});`);
+          orderDone.setAttribute(
+            "onclick",
+            `updateOrderByOrderID(${order.orderID}, "Preparing")`
+          );
           orderDone.innerHTML = "Accept";
         } else {
-          orderDone.setAttribute("onclick", `doneOrder(${order.orderID});`);
+          orderDone.setAttribute(
+            "onclick",
+            `updateOrderByOrderID(${order.orderID}, "Prepared")`
+          );
           orderDone.innerHTML = "Done";
         }
 
@@ -85,9 +101,9 @@ function updateOrders() {
       });
     })
     .catch((error) => {
-      console.log(error);
       clearInterval(intervalID);
-      alert("Something went wrong!");
+      console.log(error);
+      alert("Something went wrong! Please try again.");
     });
 }
 
@@ -105,87 +121,4 @@ function getCookie(cname) {
     }
   }
   return "";
-}
-
-function convertData(data) {
-  var formBody = [];
-  for (var property in data) {
-    var encodedKey = encodeURIComponent(property);
-    var encodedValue = encodeURIComponent(data[property]);
-    formBody.push(encodedKey + "=" + encodedValue);
-  }
-  formBody = formBody.join("&");
-  return formBody;
-}
-
-function cancalOrder(orderID) {
-  if (!confirm(`Do you want to cancel order ${orderID}?`)) {
-    return;
-  }
-  let data = {
-    orderID: orderID,
-    status: "Canceled",
-  };
-  fetch("update-order", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-      Authorization: getCookie("access_token"),
-    },
-    body: convertData(data),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      alert(data.message);
-    })
-    .catch((error) => {
-      console.log(error);
-      alert("Something went wrong! Please try again.");
-    });
-}
-
-function doneOrder(orderID) {
-  let data = {
-    orderID: orderID,
-    status: "Prepared",
-  };
-  fetch("update-order", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-      Authorization: getCookie("access_token"),
-    },
-    body: convertData(data),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      alert(data);
-    })
-    .catch((error) => {
-      console.log(error);
-      alert("Something went wrong! Please try again.");
-    });
-}
-
-function acceptOrder(orderID) {
-  let data = {
-    orderID: orderID,
-    status: "Preparing",
-  };
-  fetch("update-order", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-      Authorization: getCookie("access_token"),
-    },
-    body: convertData(data),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      alert(data);
-    })
-    .catch((error) => {
-      console.log(error);
-      alert("Something went wrong! Please try again.");
-    });
 }

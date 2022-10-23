@@ -2,7 +2,6 @@ package controller;
 
 import java.io.IOException;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.HttpServlet;
@@ -15,13 +14,12 @@ import model.Delivery;
 import dao.*;
 import java.sql.Connection;
 
-@WebServlet(name = "controller/CreateDelivery", value = "/create-delivery")
-public class CreateDelivery extends HttpServlet {
+@WebServlet(name = "controller/CreateUpdateDelivery", value = "/create-update-delivery")
+public class CreateUpdateDelivery extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // test(request, response);
 
         HttpSession session = request.getSession();
         if (session.getAttribute("manager") == null) {
@@ -29,20 +27,33 @@ public class CreateDelivery extends HttpServlet {
         }
         DBManager manager = (DBManager) session.getAttribute("manager");
         Validator validator = new Validator();
+        clearErrSession(session);
 
         String orderType = request.getParameter("order-type");
 
         Order order = null;
-
         if (validator.isNumeric(request.getParameter("orderID"))) {
             order = manager.getOrder(Integer.parseInt(request.getParameter("orderID")));
         }
 
         if (order == null) {
             session.setAttribute("orderErr", "Missing or wrong order");
-            request.getRequestDispatcher("createDelivery.jsp").include(request, response);
+            request.getRequestDispatcher("createUpdateDelivery.jsp").include(request, response);
             return;
         }
+
+        if (order.getStatus().equals("Delivered")) {
+            session.setAttribute("orderErr", "Order delivered");
+            request.getRequestDispatcher("createUpdateDelivery.jsp").include(request, response);
+            return;
+        }
+
+        if (order.getStatus().equals("Delivering")) {
+            session.setAttribute("orderErr", "Order delivering");
+            request.getRequestDispatcher("createUpdateDelivery.jsp").include(request, response);
+            return;
+        }
+
         order.setOrderType(orderType);
 
         boolean passed = true;
@@ -72,44 +83,35 @@ public class CreateDelivery extends HttpServlet {
             double fee = 55.55;
 
             if (passed) {
-                session.removeAttribute("orderErr");
-                session.removeAttribute("stateErr");
-                session.removeAttribute("postalErr");
-                Delivery delivery = new Delivery(order.getOrderID(), street, suburb, state, postal, fee, instructions);
-
-                if (manager.getDelivery(order.getOrderID()) != null) {
+                if (manager.getDeliveryByOrderID(order.getOrderID()) != null) {
+                    Delivery delivery = manager.getDeliveryByOrderID(order.getOrderID());
+                    delivery.setOrderID(order.getOrderID());
+                    delivery.setDeliveryStreet(street);
+                    delivery.setDeliverySuburb(suburb);
+                    delivery.setDeliveryState(state);
+                    delivery.setDeliveryPostal(postal);
+                    delivery.setDeliveryFee(fee);
+                    delivery.setDriverInstructions(instructions);
                     manager.updateDelivery(delivery);
                 } else {
+                    Delivery delivery = new Delivery(order.getOrderID(), street, suburb, state, postal, fee,
+                            instructions);
                     manager.createDelivery(delivery);
                 }
             } else {
-                request.getRequestDispatcher("createDelivery.jsp").include(request, response);
+                request.getRequestDispatcher("createUpdateDelivery.jsp").include(request, response);
                 return;
             }
         }
-
-        request.getRequestDispatcher("get-delivery?orderID=" + order.getOrderID()).include(request, response);
+        Delivery delivery = manager.getDeliveryByOrderID(order.getOrderID());
+        request.setAttribute("deliveryID", delivery.getDeliveryID());
+        request.getRequestDispatcher("deliveryStatus.jsp").include(request, response);
     }
 
-    private void test(HttpServletRequest request, HttpServletResponse response) {
-        DBConnector db;
-        DBManager manager;
-        Connection conn;
-
-        try {
-            db = new DBConnector();
-            response.setContentType("text/html;charset=UTF-8");
-            HttpSession session = request.getSession();
-
-            conn = db.openConnection();
-            manager = new DBManager(conn);
-            session.setAttribute("manager", manager);
-
-            Order order = new Order(101010, 202020, "Delivering");
-            session.setAttribute("order", order);
-        } catch (Exception e) {
-            System.out.println("Exception is: " + e);
-        }
+    private void clearErrSession(HttpSession session) {
+        session.removeAttribute("orderErr");
+        session.removeAttribute("stateErr");
+        session.removeAttribute("postalErr");
     }
 
     private void createManager(HttpServletRequest request, HttpServletResponse response) {

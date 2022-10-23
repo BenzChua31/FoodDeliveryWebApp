@@ -10,14 +10,15 @@
         <link href="./css/deliveryStatus.css" rel="stylesheet" type="text/css" >
         <link href="./css/header.css" rel="stylesheet" type="text/css" >
         <script src="./js/deliveryStatus.js" defer></script>
+        <script src="./js/updateData.js" defer></script>
         <title>Delivery Status</title>
     </head>
     <body>
         <%
             User user = (User) session.getAttribute("user");
-            int orderID = (int) request.getAttribute("orderID");
+            int deliveryID = (int) request.getAttribute("deliveryID");
         %>
-        <input id="orderID" value="<%= orderID %>" type="hidden"/>
+        <input id="deliveryID" value="<%= deliveryID %>" type="hidden"/>
 
         <header>
             <div class="header-content">
@@ -47,14 +48,17 @@
         </header>
                         
         <main>
-            <h1>Order no <%= orderID %></h1>
+            <h1>Delivery no <%= deliveryID %></h1>
             <div class="delivery">
                 <ul class="status">
                     <li>
                         <div class="check-icon">
-                            <img src="https://img.icons8.com/color/48/000000/checkmark--v1.png"/>
+                            <img 
+                                src="https://img.icons8.com/color/48/000000/checkmark--v1.png"
+                                id="order-received-img"
+                            />
                         </div>
-                        <b>Order received</b>
+                        <b>Order Received</b>
                     </li>
                     <li>
                         <div class="check-icon">
@@ -101,13 +105,18 @@
                         <td>Postal:</td>
                         <td id="order-postal"></td>
                     </tr>
+                    <tr>
+                        <td>Instruction:</td>
+                        <td id="order-instructions"></td>
+                    </tr>
                 </table>
                 <hr />
                 <div class="actions">
-                    <form action="create-delivery" method="post">
-                        <input type="hidden" name="order-to-update" value="<%= orderID %>" />
-                        <button type="submit" name="action" class="update-button" value="update">Update</button>
-                        <button type="submit" name="action" class="delete-button" value="delete">Delete</button>
+                    <button class="delete-button" onclick="deleteDelivery(<%= deliveryID %>)">Delete</button>
+                    <button class="update-button" href="createUpdateDelivery.jsp">Update</button>
+                    <form action="prepare-review" method="POST">
+                        <input type="hidden" name="deliveryID" value="<%= deliveryID %>"/>
+                        <button type="submit" class="review-button">Review</button>
                     </form>
                 </div>
             </div>

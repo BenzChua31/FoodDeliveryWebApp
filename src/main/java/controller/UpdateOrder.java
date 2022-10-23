@@ -13,12 +13,10 @@ import jakarta.servlet.http.HttpSession;
 import com.google.gson.Gson;
 
 import dao.*;
-import model.MenuItem;
+import model.Delivery;
 import model.Order;
-import model.OrderItem;
 import model.Staff;
 
-import java.util.ArrayList;
 import java.sql.Connection;
 
 @WebServlet(name = "controller/UpdateOrder", value = "/update-order")
@@ -33,23 +31,36 @@ public class UpdateOrder extends HttpServlet {
         DBManager manager = (DBManager) session.getAttribute("manager");
         Validator validator = new Validator();
 
-        String auth = request.getHeader("Authorization");
-        Staff staff = (Staff) session.getAttribute("staff" + auth);
-        if (staff == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized User");
+        // String auth = request.getHeader("Authorization");
+        // Staff staff = (Staff) session.getAttribute("staff" + auth);
+        // if (staff == null) {
+        // response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized User");
+        // return;
+        // }
+
+        Order order = null;
+        if (validator.isNumeric(request.getParameter("orderID"))) {
+            order = manager.getOrder(Integer.parseInt(request.getParameter("orderID")));
+        }
+
+        if (order == null) {
+            if (validator.isNumeric(request.getParameter("deliveryID"))) {
+                Delivery delivery = manager.getDelivery(Integer.parseInt(request.getParameter("deliveryID")));
+                order = manager.getOrder(delivery.getOrderID());
+            }
+        }
+
+        if (order == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Order not found!");
             return;
         }
 
-        int orderID = 0;
-        try {
-            orderID = Integer.parseInt(request.getParameter("orderID"));
-        } catch (Exception e) {
-            System.out.println("Exception is: " + e);
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing order ID");
+        if (order.getStatus().equals("Delivered")) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Order delivered!");
+            return;
         }
 
         try {
-            Order order = manager.getOrder(orderID);
             if (validator.isNumeric(request.getParameter("customerID"))) {
                 order.setCustomerID(Integer.parseInt(request.getParameter("customerID")));
             }
@@ -77,7 +88,9 @@ public class UpdateOrder extends HttpServlet {
 
             String message = "";
             if (manager.updateOrder(order)) {
-                message = "Updated Order " + orderID + " Successfully!";
+                message = "Updated Order " + order.getOrderID() + " Successfully!";
+            } else {
+                message = "Failed to delete Order " + order.getOrderID();
             }
             String json = new Gson().toJson(message);
             response.setContentType("application/json");

@@ -1,6 +1,6 @@
+<%@page import="dao.DBManager"%>
 <%@page import="model.User"%>
 <%@page import="model.DeliveryDriver"%>
-<%@page import="dao.DBManager"%>
 <%@page import="model.Order"%>
 <%@page import="model.Delivery"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -11,8 +11,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="./css/driverMain.css" rel="stylesheet" type="text/css" >
         <link href="./css/header.css" rel="stylesheet" type="text/css" >
-        <script src="./js/deliveryStatus.js" defer></script>
         <script src="./js/driverMain.js" defer></script>
+        <script src="./js/updateData.js" defer></script>
         <title>Driver Main</title>
     </head>
     <body>
@@ -22,12 +22,11 @@
 
             User user = (User) session.getAttribute("user");
             DBManager manager = (DBManager) session.getAttribute("manager");
-            DeliveryDriver driver = (DeliveryDriver) manager.getDriver(user);
-
-            Order order = (Order) session.getAttribute("order");
-            Delivery delivery = (Delivery) manager.getDelivery(order.getOrderID());
+            DeliveryDriver driver = manager.getDriver(user.getUserID());
+            double rating = manager.getDriverRating(driver.getDriverID());
+            session.setAttribute("driver", driver);
         %>
-        <input id="orderID" value="<%= order.getOrderID() %>" type="hidden"/>
+        <input type="hidden" id="driver-no" value="<%= driver.getDriverID() %>">
         
         <header>
             <div class="header-content">
@@ -41,7 +40,7 @@
                             <span>Hello, <%= driver.getFname()%></span>
                             <div class="user-menu">
                                 <a class="header-button" href="">View Account Details</a>
-                                <a class="header-button" href="">View Orders</a>
+                                <a class="header-button" href="driverReview.jsp">View Reviews</a>
                                 <a class="header-button" href="">Logout</a>
                             </div>
                         <% } else { %>
@@ -82,7 +81,7 @@
                     </tr>
                     <tr>
                         <td>Rating:</td>
-                        <td><%= driver.getRating() %></td>
+                        <td><%= String.format("%,.1f", rating) %></td>
                     </tr>
                     <tr>
                         <td>Bank Account Name:</td>
@@ -99,72 +98,152 @@
                 </table>
             </div>
 
-            <div class="section">
-                <h3>Current Delivery</h3>
-                <h1>Delivery no <%= delivery.getDeliveryID() %></h1>
-                <div class="delivery">
-                    <ul class="status">
-                        <li>
-                            <div class="check-icon">
-                                <img src="https://img.icons8.com/color/48/000000/checkmark--v1.png"/>
+            <div class="assigned-deliveries">
+                <h3 class="title">Assigned Deliveries</h3>
+                <div class="body">
+                    <%-- <div class="section" id="101010">
+                        <h1>Delivery no <span class="delivery-no">101010</span></h1>
+                        <div class="delivery-details">
+                            <ul class="status">
+                                <li>
+                                    <div class="check-icon">
+                                        <img
+                                            src="https://img.icons8.com/color/48/000000/checkmark--v1.png"
+                                            id="order-received-img"
+                                        />
+                                    </div>
+                                    <b>Order received</b>
+                                </li>
+                                <li>
+                                    <div class="check-icon">
+                                        <img 
+                                            src="https://img.icons8.com/color/48/000000/checkmark--v1.png"
+                                            id="prepared-img"
+                                        />
+                                    </div>
+                                    <b>Prepared</b>
+                                </li>
+                                <li>
+                                    <div class="check-icon">
+                                        <img 
+                                            src="https://img.icons8.com/color/48/000000/checkmark--v1.png"
+                                            id="delivered-img"
+                                        />
+                                    </div>
+                                    <b>Delivered</b>
+                                </li>
+                            </ul>
+                            <hr />
+                            <table>
+                                <tr>
+                                    <td>Order Status:</td>
+                                    <td id="order-status"></td>
+                                </tr>
+                                <tr>
+                                    <td>Street:</td>
+                                    <td id="delivery-street"></td>
+                                </tr>
+                                <tr>
+                                    <td>Suburb:</td>
+                                    <td id="delivery-suburb"></td>
+                                </tr>
+                                <tr>
+                                    <td>State:</td>
+                                    <td id="delivery-state"></td>
+                                </tr>
+                                <tr>
+                                    <td>Postal:</td>
+                                    <td id="delivery-postal"></td>
+                                </tr>
+                                <tr>
+                                    <td>Instruction:</td>
+                                    <td id="driver-instructions"></td>
+                                </tr>
+                            </table>
+                            <hr />
+                            <div class="actions">
+                                <form>
+                                    <button class="cancel-button" onclick="updateDelivery(101010, 'Cancel')">Cancel</button>
+                                    <button class="done-button" onclick="updateOrder(101010, 'Deliveried')">Done</button>
+                                </form>
                             </div>
-                            <b>Order received</b>
-                        </li>
-                        <li>
-                            <div class="check-icon">
-                                <img 
-                                    src="https://img.icons8.com/color/48/000000/checkmark--v1.png"
-                                    id="prepared-img"
-                                />
-                            </div>
-                            <b>Prepared</b>
-                        </li>
-                        <li>
-                            <div class="check-icon">
-                                <img 
-                                    src="https://img.icons8.com/color/48/000000/checkmark--v1.png"
-                                    id="delivered-img"
-                                />
-                            </div>
-                            <b>Delivered</b>
-                        </li>
-                    </ul>
-                    <hr />
-                    <table>
-                        <tr>
-                            <td>Order Status:</td>
-                            <td id="order-status"></td>
-                        </tr>
-                        <tr>
-                            <td>Order type:</td>
-                            <td id="order-type"></td>
-                        </tr>
-                        <tr>
-                            <td>Street:</td>
-                            <td id="order-street"></td>
-                        </tr>
-                        <tr>
-                            <td>Suburb:</td>
-                            <td id="order-suburb"></td>
-                        </tr>
-                        <tr>
-                            <td>State:</td>
-                            <td id="order-state"></td>
-                        </tr>
-                        <tr>
-                            <td>Postal:</td>
-                            <td id="order-postal"></td>
-                        </tr>
-                    </table>
-                    <hr />
-                    <div class="actions">
-                        <form action="create-delivery" method="post">
-                            <button type="submit" name="action" class="update-button" value="update">Update</button>
-                            <button type="submit" name="action" class="delete-button" value="delete">Delete</button>
-                        </form>
-                    </div>
+                        </div>
+                    </div> --%>
                 </div>
             </div>
+
+            <div class="available-deliveries">
+                <h3 class="title">Available Deliveries</h3>
+                <div class="body">
+                    <%-- <div class="section" id="101010">
+                        <h1>Delivery no <span class="order-no">101010</span></h1>
+                        <div class="delivery-details">
+                            <ul class="status">
+                                <li>
+                                    <div class="check-icon">
+                                        <img
+                                            src="https://img.icons8.com/color/48/000000/checkmark--v1.png"
+                                            id="order-received-img"
+                                        />
+                                    </div>
+                                    <b>Order received</b>
+                                </li>
+                                <li>
+                                    <div class="check-icon">
+                                        <img 
+                                            src="https://img.icons8.com/color/48/000000/checkmark--v1.png"
+                                            id="prepared-img"
+                                        />
+                                    </div>
+                                    <b>Prepared</b>
+                                </li>
+                                <li>
+                                    <div class="check-icon">
+                                        <img 
+                                            src="https://img.icons8.com/color/48/000000/checkmark--v1.png"
+                                            id="delivered-img"
+                                        />
+                                    </div>
+                                    <b>Delivered</b>
+                                </li>
+                            </ul>
+                            <hr />
+                            <table>
+                                <tr>
+                                    <td>Order Status:</td>
+                                    <td id="order-status"></td>
+                                </tr>
+                                <tr>
+                                    <td>Street:</td>
+                                    <td id="delivery-street"></td>
+                                </tr>
+                                <tr>
+                                    <td>Suburb:</td>
+                                    <td id="delivery-suburb"></td>
+                                </tr>
+                                <tr>
+                                    <td>State:</td>
+                                    <td id="delivery-state"></td>
+                                </tr>
+                                <tr>
+                                    <td>Postal:</td>
+                                    <td id="delivery-postal"></td>
+                                </tr>
+                                <tr>
+                                    <td>Instruction:</td>
+                                    <td id="driver-instructions"></td>
+                                </tr>
+                            </table>
+                            <hr />
+                            <div class="actions">
+                                <form>
+                                    <button class="accept-button" onclick="updateDelivery(101010, 989898)">Accept</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div> --%>
+                </div>
+            </div> 
         </main>
     </body>
 </html>

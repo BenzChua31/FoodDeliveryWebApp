@@ -216,7 +216,6 @@ CREATE TABLE Driver
     User_ID INT UNSIGNED NOT NULL,
     Number_Plate VARCHAR(10) NOT NULL UNIQUE,
     Vehicle_Description VARCHAR(20) NOT NULL,
-    Rating FLOAT,
     D_Account_Name VARCHAR(20) NOT NULL,
     D_BSB INT NOT NULL,
     D_Account_Number INT NOT NULL,
