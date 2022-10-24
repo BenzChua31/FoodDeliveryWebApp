@@ -284,7 +284,6 @@ INSERT INTO DB.ORDER VALUES(101010, 202020, 303030, "Delivery", NULL, "Order Rec
 INSERT INTO ORDER_ITEM VALUES(101010, 321321, 1, "");
 INSERT INTO DB.ORDER VALUES(111111, 202020, 303030, "Delivery", NULL, "Preparing", NULL, "Give me your money", NULL);
 
-
 INSERT INTO ORDER_ITEM VALUES(111111, 321321, 2, "No Chili");
 INSERT INTO DRIVER VALUES(454545, 989898, "AXY562", "Black Toyota", NULL, "CommBank", 117268, 45128935);
 
@@ -304,29 +303,29 @@ VALUES('OFC', 'ofc.png', 11, 'Hungry', 2000, 'NSW', 'City', 'Australia', TRUE, 1
 
 --Burger 
 INSERT INTO menu_item (Restaurant_ID, Item_Type, Servings, Price, Calories, Image, Description, Ingredients, Allergy, Stock)
-VALUES(321321, 'Burger', 303030, 10.00, 200, 'Chicken Burger', 'Chicken Burger', 'Fried Chicken, Buns, Lettuce, Ketchup, Mayo', 'None', 100);
+VALUES(303031, 'Burger', 303030, 10.00, 200, 'Chicken Burger', 'Chicken Burger', 'Fried Chicken, Buns, Lettuce, Ketchup, Mayo', 'None', 100);
 
 --Drink
 INSERT INTO menu_item (Restaurant_ID, Item_Type, Servings, Price, Calories, Image, Description, Ingredients, Allergy, Stock)
-VALUES(321321, 'Drink', 303030, 2.00, 10, 'Coca cola', 'Coca cola', 'Coca cola', 'None', 100);
+VALUES(303031, 'Drink', 303030, 2.00, 10, 'Coca cola', 'Coca cola', 'Coca cola', 'None', 100);
 
 -- Side
 INSERT INTO menu_item (Restaurant_ID, Item_Type, Servings, Price, Calories, Image, Description, Ingredients, Allergy, Stock)
-VALUES(321321, 'Side', 303030, 5.00, 100, 'Chips', 'Chips', 'Potato, Salt', 'None', 100);
+VALUES(303031, 'Side', 303030, 5.00, 100, 'Chips', 'Chips', 'Potato, Salt', 'None', 100);
 
 --Order
 INSERT INTO db.Order (Customer_ID, Restaurant_ID, Order_Type, Coupon_ID, Status, Food_Rating, Food_Instructions, Food_Feedback)
-VALUES(989899, 321321, 'Delivery', NULL, 'Accepted', NULL, NULL, NULL);
+VALUES(202021, 303031, 'Delivery', NULL, 'Accepted', NULL, NULL, NULL);
 
 --Order Item
 INSERT INTO order_item (Order_ID, Item_ID, Quantity, Comment)
-VALUES(1, 1, 1, NULL);
+VALUES(111112, 321321, 1, NULL);
 
 INSERT INTO order_item (Order_ID, Item_ID, Quantity, Comment)
-VALUES(1, 2, 2, NULL);
+VALUES(111112, 321321, 2, NULL);
 
 INSERT INTO order_item (Order_ID, Item_ID, Quantity, Comment)
-VALUES(1, 3, 1, NULL);
+VALUES(111112, 321321, 1, NULL);
 
 -- SELECT Order_ID FROM db.Order ORDER BY Order_ID DESC LIMIT 1
 

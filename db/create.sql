@@ -249,3 +249,4 @@ CREATE TABLE Order_Item
     FOREIGN KEY (Order_ID) REFERENCES db.Order(Order_ID),
     FOREIGN KEY (Item_ID) REFERENCES Menu_Item(Item_ID)
 );
+

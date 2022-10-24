@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import model.MenuItem;
 import model.Order;
 import model.OrderItem;
+import model.Restaurant;
 import dao.*;
 import java.sql.Connection;
 
@@ -46,7 +47,7 @@ public class ShowMenuItems extends HttpServlet {
             catch(Exception ex){
                 System.out.println("Error");
             }
-            Order order = manager.createOrder(1, id, "Delivery", "Empty");
+            Order order = manager.createOrder(202021, id, "Delivery", "Empty");
             if(order == null){
                 System.out.println("Order is null show menu");
             }
@@ -55,7 +56,8 @@ public class ShowMenuItems extends HttpServlet {
             //OrderItem orderItems = (OrderItem) session.getAttribute("orderItems");
             //System.out.println("hello 2");
             //System.out.println(order.getOrderID());
-            ArrayList<MenuItem> menuItems = manager.fectMenuItem();
+            //Restaurant restaurant = (Restaurant) session.getAttribute("restaurant");
+            ArrayList<MenuItem> menuItems = manager.fectMenuItem(id);
             session.setAttribute("menuItems", menuItems);
             request.getRequestDispatcher("menu.jsp").include(request, response);
         } 

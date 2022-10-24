@@ -42,6 +42,7 @@ public class RemoveOrderItem extends HttpServlet {
             session.setAttribute("order", order);
             //System.out.println(order.getStatus());
             int id = Integer.parseInt(request.getParameter("OrderItem"));
+            // get the quantity
             //OrderItem orderItem = manager.createOrderItem(order.getOrderID(), id, 1);
             manager.removeOrderItem(order.getOrderID(), id);
             //request.getRequestDispatcher("cart.jsp").include(request, response);

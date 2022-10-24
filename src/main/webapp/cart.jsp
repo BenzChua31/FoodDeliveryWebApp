@@ -43,12 +43,14 @@ while(iterator.hasNext())
 <td><%=orderItem.getOrderID()%></td>
 <td><%=orderItem.getItemID()%></td>
 <td><%=orderItem.getQuantity()%></td>
-<td><a href="remove-orderItem?OrderItem=<%= orderItem.getItemID()%>"  class="btn btn-dark text-light ms-2"> Remove</a></td>
+<td><a href="remove-orderItem?OrderItem=<%= orderItem.getItemID()%>&DeleteAll=true "  class="btn btn-dark text-light ms-2"> Remove All</a></td>
+<td><a href="remove-orderItem?OrderItem=<%= orderItem.getItemID()%>&NumberOfItem=1"  class="btn btn-dark text-light ms-2"> Remove - 1 </a></td>
 
 </tr>
 
 <%
 	}
+    request.setAttribute("orderID", orderItems.get(0).getOrderID());
 %>
 
 </table>
