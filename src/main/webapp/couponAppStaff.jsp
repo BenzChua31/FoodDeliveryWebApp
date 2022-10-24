@@ -37,7 +37,7 @@
         }
         //------------------------------------------
         $(()=>{
-
+            formValidation();
             $(".multi-datatable").DataTable(
                 {
                     select: {
@@ -146,7 +146,33 @@
                     $("#inputScopeItem").attr('required', true);
                 }
             })
-            formValidation();
+            //Form submit event
+            $("#create-form").on("submit", (e)=>{
+                e.preventDefault();
+                $.ajax({
+                    type : "post",
+                    url : "coupon/create",
+                    data : {
+                        cName: $("#inputCouponName").val(),
+                        cScope: $("#inputCouponScope").val(),
+                        resId: $("#inputScopeRes").val(),
+                        itemId: $("#inputScopeItem").val(),
+                        minMoney: $("#inputCouponMoney").val(),
+                        value: $("#inputCouponValue").val(),
+                        description: $("#inputCouponDescription").val()
+                    },
+                    async: false,
+                    success: ()=>{
+                        $("#create-success-alert").fadeIn();
+                        $("#create-success-alert").fadeOut(2000);
+                        $("#v-pills-create-tab").trigger("click");
+                    },
+                    error: ()=>{
+                        $("#create-falied-alert").fadeIn();
+                        $("#create-falied-alert").fadeOut(2000);
+                    }
+                })
+            });
         })
     </script>
 </head>
@@ -176,6 +202,10 @@
             <div class="col-9">
                 <div class="tab-content" id="v-pills-tabContent">
                     <div class="tab-pane fade show active" id="v-pills-create" role="tabpanel" aria-labelledby="v-pills-create-tab" tabindex="0">
+                        <!-- successful alert -->
+                        <div class="alert alert-success" style="display:none" id="create-success-alert">Create Successful!</div>
+                        <!-- error alert -->
+                        <div class="alert alert-danger" style="display:none" id="create-falied-alert">Create Failed!(Server Side)</div>
                         <form action="coupon/create" method="post" class="needs-validation" novalidate id="create-form">
                             <!-- Coupon Name -->
                             <div class="row mb-3">

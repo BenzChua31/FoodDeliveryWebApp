@@ -52,6 +52,8 @@ public class CouponServlet extends HttpServlet {
         String couponDescription = request.getParameter("description");
         // Image upload function does not implement, hard code here
         String couponImage = "images/no-photo-available.jpeg";
+        if (!couponService.addCoupon(couponName, couponScope, couponResId, couponItemId, couponMinMoney, couponValue, couponDescription,  couponImage))
+            response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
     }
 
     private void doFindRes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

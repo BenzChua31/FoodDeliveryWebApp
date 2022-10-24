@@ -23,7 +23,7 @@
       Created_Date, Coupon_Value, Coupon_Description, 
       Coupon_Image)
     values (#{couponName,jdbcType=VARCHAR}, #{couponScope,jdbcType=INTEGER}, #{couponMinMoney,jdbcType=INTEGER}, 
-      #{createdDate,jdbcType=TIMESTAMP}, #{couponValue,jdbcType=DOUBLE}, #{couponDescription,jdbcType=VARCHAR}, 
+      default, #{couponValue,jdbcType=DOUBLE}, #{couponDescription,jdbcType=VARCHAR},
       #{couponImage,jdbcType=VARCHAR})
   </insert>
   <update id="updateByPrimaryKey" parameterType="model.Coupon">
@@ -64,4 +64,5 @@
   <select id="selectItemInfoByResId" resultMap="ItemInfoMap">
         select Item_ID, Description from menu_item where Restaurant_ID = #{restaurantId};
   </select>
+
 </mapper>

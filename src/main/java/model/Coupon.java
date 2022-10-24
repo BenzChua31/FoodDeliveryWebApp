@@ -21,11 +21,10 @@ public class Coupon {
 
     public Coupon(){}
 
-    public Coupon(String couponName, Integer couponScope, Double couponMinMoney, Date createdDate, Double couponValue, String couponDescription, String couponImage) {
+    public Coupon(String couponName, Integer couponScope, Double couponMinMoney, Double couponValue, String couponDescription, String couponImage) {
         this.couponName = couponName;
         this.couponScope = couponScope;
         this.couponMinMoney = couponMinMoney;
-        this.createdDate = createdDate;
         this.couponValue = couponValue;
         this.couponDescription = couponDescription;
         this.couponImage = couponImage;

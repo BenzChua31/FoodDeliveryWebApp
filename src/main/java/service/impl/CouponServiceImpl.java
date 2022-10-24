@@ -1,6 +1,7 @@
 package service.impl;
 
 import mapper.CouponMapper;
+import model.Coupon;
 import model.MenuItem;
 import model.Restaurant;
 import service.CouponService;
@@ -18,18 +19,37 @@ public class CouponServiceImpl implements CouponService{
     public List<MenuItem> itemInfo(int resId) { return SqlSessionUtil.openSqlSession().getMapper(CouponMapper.class).selectItemInfoByResId(resId); }
 
     @Override
-    public Boolean addCoupon(String name, String scope, String resId, String itemId, String minMoney, String value, String description) {
+    public Boolean addCoupon(String name, String scope, String resId, String itemId, String minMoney, String value, String description, String image) {
         int intScope = 0;
         if (scope.equals("Specific store"))
-        {
             intScope = 1;
-
-        }
         else if (scope.equals("Specific items in specific store"))
-        {
             intScope = 2;
-
+        Coupon coupon = new Coupon(name, intScope, Double.valueOf(minMoney), Double.valueOf(value), description, image);
+        try{
+            CouponMapper cMapper = SqlSessionUtil.openSqlSession().getMapper(CouponMapper.class);
+            cMapper.insert(coupon);
+            int couponId = coupon.getCouponId();
+            switch (intScope)
+            {
+                case 1:
+                    String[] resIds = resId.split(",");
+                    for (int i = 0; i < resIds.length; i++)
+                        cMapper.insertCouponR(couponId, Integer.parseInt(resIds[i]));
+                    break;
+                case 2:
+                    cMapper.insertCouponItem(coupon.getCouponId(), Integer.parseInt(resId));
+                    String[] items = itemId.split(",");
+                    for (int i = 0; i < items.length; i++)
+                        cMapper.insertCouponItem(couponId, Integer.parseInt(items[i]));
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
-        return true;
     }
 }
