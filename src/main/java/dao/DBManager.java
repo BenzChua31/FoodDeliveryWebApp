@@ -304,43 +304,43 @@ public class DBManager {
          */
     }
 
-    // public Customer findCustomer(int CuserID) throws SQLException {
-    //     String fetch = "select * from db.user where UserID=" + CuserID;
-    //     Statement st = conn.createStatement();
-    //     ResultSet rs = st.executeQuery(fetch);
+    public Customer findCustomer(int CuserID) throws SQLException {
+        String fetch = "select * from db.user where UserID=" + CuserID;
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(fetch);
    
-    //     rs.next();
-    //     String email = rs.getString(5);
-    //     String password = rs.getString(4);
-    //     int userID = rs.getInt(1);
-    //     String firstName = rs.getString(2);
-    //     String lastName = rs.getString(3);
-    //     password = rs.getString(4);
-    //     email = rs.getString(5);
-    //     int phone = rs.getInt(6);
+        rs.next();
+        String email = rs.getString(5);
+        String password = rs.getString(4);
+        int userID = rs.getInt(1);
+        String firstName = rs.getString(2);
+        String lastName = rs.getString(3);
+        password = rs.getString(4);
+        email = rs.getString(5);
+        int phone = rs.getInt(6);
         
-    //     String dateOfBirth = rs.getString(7);
-    //     LocalDate localDate = LocalDate.parse(dateOfBirth);
-    //     int streetNumber = rs.getInt(8);
-    //     String streetName = rs.getString(9);
-    //     int postcode = rs.getInt(10);
-    //     String state = rs.getString(11);
-    //     String suburb = rs.getString(12);
-    //     String country = rs.getString(13);
-    //     boolean activated = rs.getBoolean(14);
+        String dateOfBirth = rs.getString(7);
+        LocalDate localDate = LocalDate.parse(dateOfBirth);
+        int streetNumber = rs.getInt(8);
+        String streetName = rs.getString(9);
+        int postcode = rs.getInt(10);
+        String state = rs.getString(11);
+        String suburb = rs.getString(12);
+        String country = rs.getString(13);
+        boolean activated = rs.getBoolean(14);
         
-    //     fetch = "select * from db.customer where user_ID=" + userID;
-    //     rs = st.executeQuery(fetch);
-    //     rs.next();
-    //     int customerID = rs.getInt(1);
-    //     String cardNumber = rs.getString(3);
-    //     String cardExpiration = rs.getString(4);
-    //     LocalDate localDate2 = LocalDate.parse(cardExpiration);
-    //     int cardPin = rs.getInt(5);
-    //     String cardName = rs.getString(6);
-    //     return new Customer(userID, firstName, lastName, password, email, phone, localDate, streetNumber, streetName, postcode, state, suburb, country, activated, customerID, cardNumber, localDate2, cardPin, cardName);
+        fetch = "select * from db.customer where user_ID=" + userID;
+        rs = st.executeQuery(fetch);
+        rs.next();
+        int customerID = rs.getInt(1);
+        String cardNumber = rs.getString(3);
+        String cardExpiration = rs.getString(4);
+        LocalDate localDate2 = LocalDate.parse(cardExpiration);
+        int cardPin = rs.getInt(5);
+        String cardName = rs.getString(6);
+        return new Customer(userID, firstName, lastName, password, email, phone, localDate, streetNumber, streetName, postcode, state, suburb, country, activated, customerID, cardNumber, localDate2, cardPin, cardName);
 
-    // } 
+    } 
 
     public Staff findStaff(String Semail, String Spassword) throws SQLException {
 
@@ -1035,7 +1035,7 @@ public class DBManager {
 
     }
 
-    // public Customer findCustomer(int customerID) {
+    // public Customer locateCustomer(int customerID) {
     //     try {
     //         Statement st = conn.createStatement();
     //         String fetch = "SELECT * FROM CUSTOMER WHERE CUSTOMER_ID = " + customerID;

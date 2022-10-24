@@ -284,7 +284,7 @@ INSERT INTO ORDER_ITEM VALUES(101010, 321321, 1, "");
 INSERT INTO DB.ORDER VALUES(111111, 202020, 303030, "Delivery", NULL, "Preparing", NULL, "Give me your money", NULL);
 
 INSERT INTO ORDER_ITEM VALUES(111111, 321321, 2, "No Chili");
-INSERT INTO DRIVER VALUES(454545, 989898, "AXY562", "Black Toyota", NULL, "CommBank", 117268, 45128935);
+INSERT INTO DRIVER VALUES(454545, 989898, "AXY562", "Black Toyota", "CommBank", 117268, 45128935);
 
 --User
 INSERT INTO user (First_Name, Last_Name, Password, Email, PhoneNo, DOB, Street_Number, Street_Name, Postcode, State, Suburb, Country, Activated)
