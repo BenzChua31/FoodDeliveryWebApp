@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="controller.*" %>
 <%@ page import="java.time.LocalDate" %>
@@ -44,7 +45,7 @@
                     <!-- Use for R1 demo-->
                     <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/empManage/showEmp">Emp Management</a>
                     <%-- If not in manage mode, show the register/login etc... buttons, else only show management related buttons --%>
-                    <% if (!manageMode) { 
+                    <% if (!manageMode) {
                         if (session.getAttribute("Customer") == null && session.getAttribute("Staff") == null) { %>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./customerLogin.jsp">Customer Login</a>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./customerRegister.jsp">Customer Register</a>

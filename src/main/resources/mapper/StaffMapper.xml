@@ -44,7 +44,7 @@
     </select>
 
     <select id="selectStaffByRestaurantIDAndPrivilegeRange" resultMap="staffMap">
-        select * from staff where Restaurant_ID = #{restaurantId} and (Privilege between #{privilege1} and #{privilege2})
+        select * from staff s join user u on s.UserID = u.UserID where Restaurant_ID = #{restaurantId} and (Privilege between #{privilege1} and #{privilege2})
     </select>
     
     <update id="updateById">

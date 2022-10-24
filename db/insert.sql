@@ -90,3 +90,13 @@ INSERT INTO Staff VALUES
 INSERT INTO Staff VALUES
     (null, 7, 1, 3, 'General staff');
 
+#Coupon
+INSERT INTO Coupon VALUES (null, "Coupon1", 0, 0, DEFAULT, 10.2 , "No Description", "images/no-photo-available.jpeg");
+INSERT INTO Coupon VALUES (null, "Coupon2", 1, 3, DEFAULT, 4.5 , "No Description", "images/no-photo-available.jpeg");
+INSERT INTO Coupon VALUES (null, "Coupon3", 2, 9.5, DEFAULT, 2 , "No Description", "images/no-photo-available.jpeg");
+
+INSERT INTO Coupon_R VALUES (2, 1);
+INSERT INTO Coupon_R VALUES (3, 1);
+
+INSERT INTO Coupon_Item VALUES (3, 1);
+INSERT INTO Coupon_Item VALUES (3, 2);

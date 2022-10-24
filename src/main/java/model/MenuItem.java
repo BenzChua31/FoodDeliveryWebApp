@@ -13,6 +13,7 @@ public class MenuItem {
     String allergy;
     int stock;
 
+    public MenuItem(){};
     public MenuItem(int itemID, int restarauntID, String itemType, int servings, float price, int calories,
             String image, String description, String ingredients, String allergy, int stock) {
         this.itemID = itemID;

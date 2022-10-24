@@ -15,10 +15,20 @@
         <filter-name>SqlSessionFilter</filter-name>
         <filter-class>filters.SqlSessionFilter</filter-class>
     </filter>
-    <!--Currently filter emp management only -->
+    <filter>
+        <filter-name>UserFilter</filter-name>
+        <filter-class>filters.UserFilter</filter-class>
+    </filter>
+    <!--Currently filter emp management and coupon -->
+    <filter-mapping>
+        <filter-name>UserFilter</filter-name>
+        <url-pattern>/couponAppStaff.jsp</url-pattern>
+        <url-pattern>/coupon/*</url-pattern>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>SqlSessionFilter</filter-name>
         <url-pattern>/empManage/*</url-pattern>
+        <url-pattern>/coupon/*</url-pattern>
     </filter-mapping>
     <session-config>
         <session-timeout>
