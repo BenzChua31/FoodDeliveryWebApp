@@ -77,6 +77,9 @@
 function addMenu() {
     let name = document.getElementById("newMenuName").value;
     let price = parseFloat(document.getElementById("newMenuPrice").value);
+    let calories = parseInt(document.getElementById("newMenuCalories").value);
+    let description = document.getElementById("newMenuDescription").value;
+    let ingredients = document.getElementById("newMenuIngredients").value;
     let category = document.getElementById("addCategory").value;
 
     if(name.length == 0 || isNaN(price) || price < 1) {
@@ -84,7 +87,7 @@ function addMenu() {
       return;
     }
 
-    window.location.replace('menuAddPage.jsp?name='+name+'&price='+price+'&category=' + category+'&type=add');
+    window.location.replace('menuAddPage.jsp?name='+name+'&price='+price+'&calories=' +calories+'&description='+description+'&ingredients='+ingredients+'&category='+ category+'&type=add');
     
 }
 
@@ -92,14 +95,17 @@ function editMenu() {
     let name = document.getElementById("editMenuName").value;
     let oldName = document.getElementById('oldName').innerText;
     let price = parseFloat(document.getElementById("editMenuPrice").value);
-    let category = document.getElementById("editCategory").value;
+    let calories = parseInt(document.getElementById("newMenucalories").value);
+    let description = document.getElementById("newMenuDescription").value;
+    let ingredients = document.getElementById("newMenuIngredients").value;
+    let category = document.getElementById("addCategory").value;
 
     if(name.length == 0 || isNaN(price) || price < 1) {
       alert("Please enter valid name and price");
       return;
     }
 
-    window.location.replace("menuAddPage.jsp?name="+name+"&oldName="+oldName+"&price="+price+"&category=" + category+"&type=edit");
+    window.location.replace("menuAddPage.jsp?name="+name+'&price='+price+'&calories=' +calories+'&description='+description+'&ingredients='+ingredients+"&category=" + category+"&type=edit");
 }
 
 function addCat() {
@@ -155,8 +161,16 @@ function OpenRemove() {
       <div class="close-btn" onclick="togglePopup()">&times;</div>
       <h1> Add menu </h1>
       <p>&nbsp;</p>
-      <p style="margin-bottom:120px;"><label for="name">Menu name: </label> <input id="newMenuName" name="newMenuName" type="text" /><br/><br/>
-      <label for="price">Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label> <input id="newMenuPrice" name="newMenuPrice" type="number" /><br /><br />
+      <p style="margin-bottom:120px;"><label for="name">Menu name: </label> 
+      <input id="newMenuName" name="newMenuName" type="text" /><br/><br/>
+      <label for="price">Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label> 
+      <input id="newMenuPrice" name="newMenuPrice" type="number" /><br /><br />
+      <label for="price">Calories:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label> 
+      <input id="newMenuCalories" name="newMenuCalories" type="number" /><br /><br />
+      <label for="price">Description:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label> 
+      <input id="newMenuDescription" name="newMenuDescription" type="text" /><br /><br />
+      <label for="price">Ingredients:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label> 
+      <input id="newMenuIngredients" name="newMenuIngredients" type="text" /><br /><br />
       <label for="category">Choose a category:</label>
       <select name="category" id="addCategory">
       <%
@@ -179,8 +193,16 @@ function OpenRemove() {
       <h1> Edit menu </h1>
       <p>&nbsp;</p>
       <p id="oldName" style="display:none"></p>
-      <p style="margin-bottom:120px;"><label for="name">Menu name: </label> <input id="editMenuName" name="editMenuName" type="text" /><br/><br/>
-      <label for="price">Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label> <input id="editMenuPrice" name="editMenuPrice" type="number" /><br /><br />
+      <p style="margin-bottom:120px;"><label for="name">Menu name: </label> 
+      <input id="editMenuName" name="editMenuName" type="text" /><br/><br/>
+      <label for="price">Price:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label> 
+      <input id="editMenuPrice" name="editMenuPrice" type="number" /><br /><br />
+      <label for="price">Calories:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label> 
+      <input id="newMenuCalories" name="newMenuCalories" type="number" /><br /><br />
+      <label for="price">Description:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label> 
+      <input id="newMenuDescription" name="newMenuDescription" type="text" /><br /><br />
+      <label for="price">Ingredients:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label> 
+      <input id="newMenuIngredients" name="newMenuIngredients" type="text" /><br /><br />
       <label for="category">Choose a category:</label>
       <select name="category" id="editCategory">
       <%

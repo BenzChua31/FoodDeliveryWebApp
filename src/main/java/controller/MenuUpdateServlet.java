@@ -26,33 +26,23 @@ public class MenuUpdateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        System.out.println("entered"); 
         DBManager manager = (DBManager) session.getAttribute("manager");
         if(manager == null) {
             createManager(request, response);
         }
         manager = (DBManager) session.getAttribute("manager");
 
-        try {
-            ArrayList<Restaurant> restaraunts = manager.fectRestaraunt();
-            System.out.println(restaraunts.size()); 
+           
+            ArrayList<Restaurant> restaraunts = (ArrayList<Restaurant>) session.getAttribute("allRestos");
             int id = Integer.parseInt(request.getParameter("id"));
-            System.out.println("id: " + id); 
 
             for (Restaurant restaurant : restaraunts) {
-                System.out.println("Resta" + restaurant.getRestaurantID()); 
                 if(restaurant.getRestaurantID() == id) {
-                    System.out.println("found"); 
                     session.setAttribute("currentResto", restaurant);
-
                     request.getRequestDispatcher("/menuStaffPage.jsp").include(request, response);
                     return;
                 }
             }
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(ShowRestaraunts.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     private void createManager(HttpServletRequest request, HttpServletResponse response) {

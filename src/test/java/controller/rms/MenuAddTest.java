@@ -41,7 +41,7 @@ public class MenuAddTest {
         MenuManagement menuManagement = new MenuManagement();
         MenuCategory newCategory = menuManagement.AddCategory("BBQ");
         int previousNumMenu = menuManagement.GetAllMenus().size();
-        Menu newMenu = menuManagement.AddMenu("Pork belly", "13.4", newCategory.GetName());
+        Menu newMenu = menuManagement.AddMenu("Pork belly", "13.4", "123", newCategory.GetName(), null, newCategory.GetName());
         int currentNumMenu = menuManagement.GetAllMenus().size();
         //Check the attributes
         assertTrue(newMenu.GetName().length() > 0);
@@ -58,8 +58,8 @@ public class MenuAddTest {
     public void testDeleteMenu() throws Exception {
         MenuManagement menuManagement = new MenuManagement();
         MenuCategory newCategory = menuManagement.AddCategory("BBQ");
-        Menu newMenu = menuManagement.AddMenu("Pork belly", "13.4", newCategory.GetName());
-        Menu anotherMenu = menuManagement.AddMenu("beef", "17.4", "BBQ");
+        Menu newMenu = menuManagement.AddMenu("Pork belly", "13.4", "123", newCategory.GetName(), null, newCategory.GetName());
+        Menu anotherMenu = menuManagement.AddMenu("beef", "17.4", "123", "BBQ", null, newCategory.GetName());
         int previousNumMenu = menuManagement.GetAllMenus().size();
         menuManagement.DeleteMenu("Pork belly");
         int currentNumMenu = menuManagement.GetAllMenus().size();
