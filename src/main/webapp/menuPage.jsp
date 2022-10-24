@@ -17,8 +17,10 @@
     <meta name="theme-color" content="#478ac9">
 
  <%
+ // Get Restaurant
     Staff loginedStaff = (Staff) session.getAttribute("staff");
-      MenuManagement me = staff.GetMenuManagement();
+      //MenuManagement me = staff.GetMenuManagement();
+      MenuManagement me = new MenuManagement();
       List<Menu> menus = me.GetAllMenus();
       List<MenuCategory> categories = me.GetAllCategories();
       int categorySize = categories.size();
