@@ -87,7 +87,7 @@ function addMenu() {
       return;
     }
 
-    window.location.replace('menuAddPage.jsp?name='+name+'&price='+price+'&calories=' +calories+'&description='+description+'&ingredients='+ingredients+'&category='+ category+'&type=add');
+    window.location.replace('addMenu?name='+name+'&price='+price+'&calories=' +calories+'&description='+description+'&ingredients='+ingredients+'&category='+ category+'&type=add');
     
 }
 
@@ -105,7 +105,7 @@ function editMenu() {
       return;
     }
 
-    window.location.replace("menuAddPage.jsp?name="+name+'&price='+price+'&calories=' +calories+'&description='+description+'&ingredients='+ingredients+"&category=" + category+"&type=edit");
+    window.location.replace("addMenu.jsp?name="+name+'&price='+price+'&calories=' +calories+'&description='+description+'&ingredients='+ingredients+"&category=" + category+"&type=edit");
 }
 
 function addCat() {

@@ -13,7 +13,7 @@
     <title>Menu Add</title>
     
     <link rel="stylesheet" href="./css/menuTest.css" media="screen">
-<link rel="stylesheet" href="./css/menu.css" media="screen">
+    <link rel="stylesheet" href="./css/menu.css" media="screen">
     <meta name="theme-color" content="#478ac9">
 
   </head>
@@ -36,6 +36,7 @@
     String ingredients = request.getParameter("ingredients");
     String category = request.getParameter("category");
     String type = request.getParameter("type");
+
     if(price == null) {
       //Add category
       if(me.IsAvailable(name, false)){

@@ -669,6 +669,29 @@ public class DBManager {
         return null;
     }
 
+    public MenuItem addMenuItem(int restauranID, String name, float price, int calories, String image, String description, String ingredients) {
+        try {
+            String fetch = "insert into db.menu_item(Restaurant_ID, Item_Type, Servings, Price, Calories, Image,Description,Ingredients, Allergy, Stock ) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(fetch);
+            ps.setInt(1, restauranID);
+            ps.setString(2, name);
+            ps.setInt(3, 1);
+            ps.setFloat(4, price);
+            ps.setInt(5, calories);
+            ps.setString(6, image);
+            ps.setString(7, description);
+            ps.setString(8, ingredients);
+            ps.setString(9, "None");
+            ps.setInt(10, 100);
+
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception is: " + e);
+        }
+        return null;
+    }
     // Delivery
     public boolean createDelivery(Delivery delivery) {
         try {
