@@ -70,9 +70,11 @@ public class StaffAddDetailsServlet extends HttpServlet{
         catch (NullPointerException ex) {
             ex.printStackTrace();
             System.out.println("nullptr exception");
-        }
+        }    
         catch (SQLException ex) {
             System.out.println("sql exception");
+            request.setAttribute("Error", "Restaurant ID Does not exist");
+            request.getRequestDispatcher("staffAddDetails.jsp").include(request, response);
             ex.printStackTrace();
         }
     }
