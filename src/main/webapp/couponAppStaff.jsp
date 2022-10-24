@@ -17,10 +17,28 @@
     <base href ="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/">
     <title>Coupon</title>
     <script type = "text/javascript">
+        // Reference from Bootstarp5 Validation----------------
+        function formValidation() {
+            'use strict'
 
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        }
+        //------------------------------------------
         $(()=>{
 
-            $("#res-table").DataTable(
+            $(".multi-datatable").DataTable(
                 {
                     select: {
                         style: "multi"
@@ -33,23 +51,14 @@
                 }
             )
 
-            $("#items-table").DataTable(
-                {
-                    select: {
-                        style: "multi"
-                    },
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'selectAll',
-                        'selectNone'
-                    ]
-                }
-            )
-
-            //Register button click event
+            //Register buttons click event
             $("#page-close-btn").on('click', ()=>{
                 location.href = "index.jsp";
             })
+
+            $("#v-pills-create-tab").on('click', ()=>{
+                $("#create-form").removeClass('was-validated');
+            });
 
             $("#res-select-btn").on('click', ()=>{
                 let dt = $("#res-table").DataTable();
@@ -116,7 +125,7 @@
                     $("#scope-new-row").css('display', '');
                     $("#scope-res").css('display', '');
                     $("#scope-item").css('display', 'none');
-                    $("#inputScopeRes").attr('required');
+                    $("#inputScopeRes").attr("required", true);
                     $("#inputScopeItem").removeAttr('required');
                     $("#inputScopeRes").val('');
                 }
@@ -133,10 +142,11 @@
                     $("#scope-item").css('display', '');
                     $("#inputScopeRes").val('');
                     $("#inputScopeItem").val('');
-                    $("#inputScopeRes").attr('required');
-                    $("#inputScopeItem").attr('required');
+                    $("#inputScopeRes").attr('required', true);
+                    $("#inputScopeItem").attr('required', true);
                 }
             })
+            formValidation();
         })
     </script>
 </head>
@@ -166,12 +176,15 @@
             <div class="col-9">
                 <div class="tab-content" id="v-pills-tabContent">
                     <div class="tab-pane fade show active" id="v-pills-create" role="tabpanel" aria-labelledby="v-pills-create-tab" tabindex="0">
-                        <form action="coupon/create" method="post">
+                        <form action="coupon/create" method="post" class="needs-validation" novalidate id="create-form">
                             <!-- Coupon Name -->
                             <div class="row mb-3">
                                 <label for="inputCouponName" class="col-sm-2 col-form-label">&#160;Name</label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" id="inputCouponName" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a name.
+                                    </div>
                                 </div>
                             </div>
                             <!-- Coupon Scope -->
@@ -189,8 +202,11 @@
                                         <br>
                                         <label for="inputScopeRes">Restaurant ID</label>
                                         <div class="input-group mb-3">
-                                            <input type="text" class="form-control" id="inputScopeRes" aria-describedby="button-res" readonly>
+                                            <input type="text" class="form-control" id="inputScopeRes" aria-describedby="button-res" onkeydown="return false;" style="caret-color: transparent !important;">
                                             <button class="btn btn-outline-secondary" type="button" id="button-res" data-bs-toggle="modal" data-bs-target="#resSelect">Select</button>
+                                            <div class="invalid-feedback">
+                                                Please select restaurant.
+                                            </div>
                                         </div>
                                     </div>
                                         <!-- Item option -->
@@ -198,8 +214,11 @@
                                             <br>
                                             <label for="inputScopeItem">Item ID</label>
                                             <div class="input-group mb-3">
-                                                <input type="text" class="form-control" id="inputScopeItem" aria-describedby="button-item" readonly>
+                                                <input type="text" class="form-control" id="inputScopeItem" aria-describedby="button-item" onkeydown="return false;" style="caret-color: transparent !important;" >
                                                 <button class="btn btn-outline-secondary" type="button" id="button-item" data-bs-toggle="modal" data-bs-target="#itemSelect">Select</button>
+                                                <div class="invalid-feedback">
+                                                    Please select item.
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -209,30 +228,41 @@
                             <div class="row mb-3">
                                 <label for="inputCouponMoney" class="col-sm-2 col-form-label">&#160;Min&#160;Money</label>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="inputCouponMoney" required>
+                                    <input type="number" min="0" step=".01" class="form-control" id="inputCouponMoney" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a positive number (up to 2 digits)
+                                    </div>
                                 </div>
                             </div>
                             <!-- Value -->
                             <div class="row mb-3">
                                 <label for="inputCouponValue" class="col-sm-2 col-form-label">&#160;Value</label>
                                 <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="inputCouponValue" required>
+                                    <input type="number" min="0" step=".01" class="form-control" id="inputCouponValue" required>
+                                    <div class="invalid-feedback">
+                                        Please provide a positive number (up to 2 digits)
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Image upload function does not implement-->
+                            <!---------------- Image upload function does not implement ---------------------------
                             <div class="row rb-3" style="display: none">
                                 <label for="inputCouponImage" class="col-sm-2 col-form-label">&#160;Image</label>
                                 <div class="col-sm-2">
                                     <input type="text" class="form-control" id="inputCouponImage">
                                 </div>
                             </div>
+                             ---------------------------------------------------------------->
                             <!-- Description -->
                             <div class="row mb-3">
                                 <label for="inputCouponDescription" class="col-sm-2 col-form-label">&#160;Description</label>
                                 <div class="col-sm-9">
                                     <textarea class="form-control" id="inputCouponDescription" required></textarea>
+                                    <div class="invalid-feedback">
+                                        Please provide a description
+                                    </div>
                                 </div>
                             </div>
+                            <button type="submit" class="btn btn-primary">Create</button>
                         </form>
                     </div>
                     <div class="tab-pane fade" id="v-pills-list" role="tabpanel" aria-labelledby="v-pills-list-tab" tabindex="0">list</div>
@@ -253,7 +283,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <table id="res-table" class="table table-striped" style="width: 100%">
+                    <table id="res-table" class="table table-striped multi-datatable" style="width: 100%">
                         <thead>
                         <tr>
                             <th>Restaurant ID</th>
@@ -281,7 +311,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <table id="items-table" class="table table-striped" style="width: 100%">
+                    <table id="items-table" class="table table-striped multi-datatable" style="width: 100%">
                         <thead>
                         <tr>
                             <th>Item ID</th>

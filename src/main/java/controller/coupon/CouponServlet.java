@@ -43,7 +43,15 @@ public class CouponServlet extends HttpServlet {
     }
 
     private void doCreate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String couponName = request.getParameter("cName");
+        String couponScope = request.getParameter("cScope");
+        String couponResId = request.getParameter("resId");
+        String couponItemId = request.getParameter("itemId");
+        String couponMinMoney = request.getParameter("minMoney");
+        String couponValue = request.getParameter("value");
+        String couponDescription = request.getParameter("description");
+        // Image upload function does not implement, hard code here
+        String couponImage = "images/no-photo-available.jpeg";
     }
 
     private void doFindRes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
