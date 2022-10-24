@@ -55,4 +55,13 @@ public class CouponServiceImpl implements CouponService{
             return false;
         }
     }
+
+    @Override
+    public Boolean deleteCoupons(String ids) {
+        int rowCount = 0;
+        String[] allId = ids.split(",");
+        for (int i = 0; i < allId.length; i++)
+            rowCount += SqlSessionUtil.openSqlSession().getMapper(CouponMapper.class).deleteByPrimaryKey(Integer.valueOf(allId[i]));
+        return rowCount > 0 ? true : false;
+    }
 }

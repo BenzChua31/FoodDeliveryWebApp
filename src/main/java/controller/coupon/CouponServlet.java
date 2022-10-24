@@ -30,12 +30,20 @@ public class CouponServlet extends HttpServlet {
         String servletPath = request.getRequestURI().substring(request.getContextPath().length());
         if (servletPath.equals("/coupon/create"))
             doCreate(request, response);
-        if (servletPath.equals("/coupon/findRes"))
+        else if (servletPath.equals("/coupon/findRes"))
             doFindRes(request, response);
-        if (servletPath.equals("/coupon/findItems"))
+        else if (servletPath.equals("/coupon/findItems"))
             doFindItems(request, response);
-        if (servletPath.equals("/coupon/showCoupons"))
+        else if (servletPath.equals("/coupon/showCoupons"))
             doShowCoupons(request, response);
+        else if (servletPath.equals("/coupon/deleteCoupon"))
+            doDeleteCoupon(request, response);
+    }
+
+    private void doDeleteCoupon(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        String ids = request.getParameter("couponIds");
+        if (!couponService.deleteCoupons(ids))
+            response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
     }
 
     private void doShowCoupons(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{

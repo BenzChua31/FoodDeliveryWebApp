@@ -12,4 +12,6 @@ public interface CouponService {
 
     List<Coupon> getCoupons();
     Boolean addCoupon(String name, String scope, String resId, String itemId, String minMoney, String value, String description, String image);
+
+    Boolean deleteCoupons(String ids);
 }

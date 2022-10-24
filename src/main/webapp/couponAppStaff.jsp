@@ -11,7 +11,6 @@
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
             crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/sl-1.4.0/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/sl-1.4.0/datatables.min.js"></script>
     <%-- Dynamically set the base path for the entire page --%>
@@ -101,7 +100,8 @@
                             text: "Delete",
                             className: "btn btn-danger",
                             action: function (e, dt, node, config){
-
+                                if(dt.rows(".selected").count())
+                                    $("#delete-confirm-modal").modal("show");
                             }
                         }
                     ]
@@ -178,6 +178,25 @@
             $("#create-clear-btn").on('click', formClear)
 
             $("#v-pills-list-tab").on('click', showCouponsToDataTable)
+
+            $("#confirm-delete-btn").on('click', ()=>{
+                let dt = $("#coupon-list-table").DataTable();
+                let ids = "";
+                for (let i = 0; i < dt.rows(".selected").count(); i++)
+                    ids += dt.rows( ".selected" ).data()[i][0] + ",";
+                ids = ids.substring(0, ids.length - 1);
+                $.ajax({
+                    type : "get",
+                    url : "coupon/deleteCoupon",
+                    data : {couponIds: ids, t: Date.parse(new Date())},
+                    async: false,
+                    success: showCouponsToDataTable,
+                    error: ()=> {
+                        $("#delete-falied-alert").fadeIn();
+                        $("#delete-falied-alert").fadeOut(2000);
+                    }
+                })
+            })
 
         //----------------Scope select text change event----------------------------------------------------------
             $("#inputCouponScope").change(()=>{
@@ -277,9 +296,9 @@
                             <div class="row mb-3">
                                 <label for="inputCouponName" class="col-sm-2 col-form-label">&#160;Name</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" id="inputCouponName" required>
+                                    <input type="text" class="form-control" id="inputCouponName" maxlength="25" required>
                                     <div class="invalid-feedback">
-                                        Please provide a name.
+                                        Please provide a name(max 25 length).
                                     </div>
                                 </div>
                             </div>
@@ -371,6 +390,7 @@
                     </div>
                     <!----------------------------------- Show Coupon List --------------------------------------------------------------->
                     <div class="tab-pane fade" id="v-pills-list" role="tabpanel" aria-labelledby="v-pills-list-tab" tabindex="0">
+                        <div class="alert alert-danger" style="display:none" id="delete-falied-alert">Delete Failed!(Server Side)</div>
                         <table id="coupon-list-table" class="table table-striped" style="width: 100%">
                             <caption style="caption-side: top">Coupon Lists</caption>
                             <thead>
@@ -395,7 +415,7 @@
            </div>
         </div>
     </div>
-    <!-- All Modals -->
+    <!----------------------------------------------------All Modals ------------------------------------------------------------------------------>
 
     <!-- Res Modals -->
     <div class="modal fade" id="resSelect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="resStaticBackdropLabel" aria-hidden="true">
@@ -448,6 +468,24 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="items-select-btn">Select</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Confirm modal-->
+    <div class="modal fade" id="delete-confirm-modal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Warning</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure to remove the selected coupons? (Cannot be withdrawn)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" id="confirm-delete-btn" data-bs-dismiss="modal">Yes</button>
                 </div>
             </div>
         </div>
