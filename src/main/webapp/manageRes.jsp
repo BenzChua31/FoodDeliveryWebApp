@@ -71,6 +71,7 @@
                     </c:otherwise>
                     </c:choose></td>
                 <td class="text-dark text-center">
+                    <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="menu-update?id=${restaurant.restaurantID}">Edit Menu</a>
                     <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="find-res?id=${restaurant.restaurantID}">Edit</a>
                     <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="delete-res?res=${restaurant.restaurantID}">Delete</a>
                 </td>

@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -85,14 +86,24 @@ public class StaffEditDetails extends HttpServlet{
             manager.updateStaff(staff.getUserID(), firstName, lastName, password, email, phoneNumber, dob, streetNumber, streetName, postcode, state, suburb, country, true, staff.getStaffID(), restaurantID, privilege, position);
             staff = manager.findStaff(staff.getUserID());
             session.setAttribute("Staff", staff);
-            request.getRequestDispatcher("staffMain.jsp").include(request, response);
+            request.getRequestDispatcher("index.jsp").include(request, response);
         }
         catch (NullPointerException ex) {
             ex.printStackTrace();
             System.out.println("nullptr exception");
+            request.setAttribute("Error", "Null Pointer Exception. Please Try Again");
+            request.getRequestDispatcher("customerRegister.jsp").include(request, response);
+        }
+        catch (SQLIntegrityConstraintViolationException ex) {
+            System.out.println("Dpublicate Email used");
+            request.setAttribute("Error", "Email already in use");
+            request.getRequestDispatcher("customerRegister.jsp").include(request, response);
+            ex.printStackTrace();
         }
         catch (SQLException ex) {
-            System.out.println("sql exception");
+            System.out.println("SQL Exception");
+            request.setAttribute("Error", "Restaurant ID Does not exist");
+            request.getRequestDispatcher("staffEditDetails.jsp").include(request, response);
             ex.printStackTrace();
         }
     }

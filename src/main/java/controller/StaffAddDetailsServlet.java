@@ -65,14 +65,16 @@ public class StaffAddDetailsServlet extends HttpServlet{
             manager.addStaffDetails(user.getEmail(), restaurantIDTemp, privilegeTemp, position);
             Staff staff = manager.findStaff(user.getUserID());
             session.setAttribute("Staff", staff);
-            request.getRequestDispatcher("staffMain.jsp").include(request, response);
+            request.getRequestDispatcher("index.jsp").include(request, response);
         }
         catch (NullPointerException ex) {
             ex.printStackTrace();
             System.out.println("nullptr exception");
-        }
+        }    
         catch (SQLException ex) {
             System.out.println("sql exception");
+            request.setAttribute("Error", "Restaurant ID Does not exist");
+            request.getRequestDispatcher("staffAddDetails.jsp").include(request, response);
             ex.printStackTrace();
         }
     }

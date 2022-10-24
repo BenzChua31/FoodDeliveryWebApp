@@ -82,7 +82,9 @@ public class StaffRegisterServlet extends HttpServlet{
         }
         catch (SQLException ex) {
             System.out.println("sql exception");
-            ex.printStackTrace();
+                request.setAttribute("Error", "Email already in use");
+                request.getRequestDispatcher("staffRegister.jsp").include(request, response);
+                ex.printStackTrace();
         }
     }
 

@@ -10,10 +10,15 @@
         <h1>Edit Details</h1>
         <%            
             Staff staff = (Staff) session.getAttribute("Staff");
+            String error = "";
+            if (request.getAttribute("Error") != null) {
+                error = (String) request.getAttribute("Error");
+            }
         %>
         <br/>
         <form action="StaffEditDetails" method="post">
             <table id="registerTable">
+                <tr><label><%=error%></label></tr>
                 <tr>
                     <td><label for="firstName">First Name:</label></td>
                     <td><input type="text" name="firstName" required="true" value=<%=staff.getFname()%>></td>
@@ -36,7 +41,7 @@
                 </tr>
                 <tr>
                     <td><label for="dateOfBirth">Date of Birth</label>
-                    <td><input type="date" name="dob" required="true" value=<%=staff.getDob()%>></td>
+                    <td><input type="date" name="dob" required="true" value=<%=staff.getDob2()%>></td>
                 </tr>
                 <br />
                 <tr>
@@ -83,6 +88,6 @@
                 <input type ="submit" value="Update Details">
             </div>    
         </form>
-        <a href="./staffMain.jsp">Back to Main Page</a>
+        <a href="./index.jsp">Back to Main Page</a>
     </body>
 </html>

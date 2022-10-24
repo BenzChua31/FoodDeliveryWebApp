@@ -30,6 +30,9 @@ public class IndexServlet extends HttpServlet {
         try {
             ArrayList<Restaurant> restaurants = manager.seeAllRestaurants();
             session.setAttribute("restaurants", restaurants);
+            if(session.getAttribute("allRestos") == null) {
+                session.setAttribute("allRestos", restaurants);
+            }
             request.getRequestDispatcher("index.jsp").include(request, response);
         } catch (Exception e) {
             Logger.getLogger(IndexServlet.class.getName()).log(Level.SEVERE, null, e);

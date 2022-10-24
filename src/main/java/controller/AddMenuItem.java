@@ -25,7 +25,7 @@ import java.sql.Connection;
 public class AddMenuItem extends HttpServlet {
     @Override
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
 
         if (session.getAttribute("manager") == null){
@@ -41,13 +41,24 @@ public class AddMenuItem extends HttpServlet {
             Order order = (Order) session.getAttribute("order");            
             if(order == null){
                 System.out.println("Order is null");
+                session.setAttribute("orderErr", "Missing or wrong order");
+                request.getRequestDispatcher("menu.jsp").include(request, response);
+                return;
             }
+
             System.out.println("hello ");
             //System.out.println(order.getOrderID());
             session.setAttribute("order", order);
             //System.out.println(order.getStatus());
             int id = Integer.parseInt(request.getParameter("MenuItemID"));
-            OrderItem orderItem = manager.createOrderItem(order.getOrderID(), id, 1);
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            if (quantity <= 0) {
+                session.setAttribute("orderErr", "Invalid Quantity");
+                request.getRequestDispatcher("menu.jsp").include(request, response);
+                return;
+            }
+            String comment = request.getParameter("comment");
+            OrderItem orderItem = manager.createOrderItem(order.getOrderID(), id, quantity, comment);
 
             //ArrayList<OrderItem> orderItems = manager.fectOrderItem(order.getOrderID());
             //session.setAttribute("order", order.getOrderID());

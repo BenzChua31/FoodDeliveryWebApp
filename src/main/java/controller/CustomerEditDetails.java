@@ -90,7 +90,7 @@ public class CustomerEditDetails extends HttpServlet{
                 manager.updateCustomer(customer.getUserID(), firstName, lastName, password, email, phone, dob, streetNumber, streetName, postcode, state, suburb, country, true, customer.getCustomerID(), cardNumber, cardExpirationTemp, cardPin, cardName);
                 customer = manager.findCustomer(customer.getUserID());
                 session.setAttribute("Customer", customer);
-                request.getRequestDispatcher("main.jsp").include(request, response);
+                request.getRequestDispatcher("index.jsp").include(request, response);
             }
             catch (NullPointerException ex) {
                 ex.printStackTrace();

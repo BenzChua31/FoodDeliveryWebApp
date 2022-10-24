@@ -1,3 +1,7 @@
+:root {
+  --border-radius: 8px;
+}
+
 body {
   background-color: #202020;
 }
@@ -8,23 +12,22 @@ main {
 }
 
 .section {
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   background-color: #282828;
   padding: 1rem;
   width: 80%;
   margin: auto;
-  margin-top: 0.5rem;
 }
 
 h1 {
   text-align: center;
 }
 
-.delivery {
-  border-radius: 8px;
+.delivery-details {
+  border-radius: var(--border-radius);
   background-color: #282828;
   padding: 1rem;
-  width: 80%;
+  width: 95%;
   margin: auto;
   margin-top: 0.5rem;
 }
@@ -44,6 +47,40 @@ li {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  gap: 10px;
+}
+
+.assigned-deliveries,
+.available-deliveries {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: var(--border-radius);
+}
+
+.assigned-deliveries {
+  background-color: tomato;
+}
+
+.available-deliveries {
+  background-color: darkseagreen;
+}
+
+.title {
+  text-align: center;
+  position: sticky;
+  top: 56px;
+  line-height: 1.8em;
+  background-color: inherit;
+  border-radius: var(--border-radius);
+  letter-spacing: 1.25px;
+  z-index: 1;
+}
+
+.body {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
@@ -69,58 +106,39 @@ hr {
   display: none;
 }
 
-.update-button {
-  position: relative;
-  background-color: #505050;
-  border: none;
-  color: white;
-  padding: 0.5rem;
-  font-size: large;
-  cursor: pointer;
+#order-status {
+  font-weight: bold;
+  color: #40ff70;
 }
 
-.update-button:after {
-  content: "";
-  position: absolute;
-  bottom: 0px;
-  left: 0;
-  height: 2px;
-  width: 0;
-  background-color: blue;
-  transition: all 0.3s;
-}
-
-.update-button:hover:after {
-  width: 100%;
-}
-
-.delete-button {
-  float: right;
-  position: relative;
-  background-color: #505050;
-  border: none;
-  color: white;
-  padding: 0.5rem;
-  font-size: large;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.delete-button:after {
-  content: "";
-  position: absolute;
-  bottom: 0px;
-  left: 0;
-  height: 2px;
-  width: 0;
-  background-color: red;
-  transition: all 0.3s;
-}
-
-.delete-button:hover {
+.warning-text {
   color: red;
 }
 
-.delete-button:hover:after {
-  width: 100%;
+.cancel-button,
+.done-button,
+.accept-button {
+  position: relative;
+  background-color: #505050;
+  border: none;
+  color: white;
+  padding: 0.5rem;
+  font-size: large;
+  cursor: pointer;
+}
+
+.cancel-button {
+  float: right;
+}
+
+.cancel-button:hover {
+  color: red;
+}
+
+.done-button:hover {
+  color: blue;
+}
+
+.accept-button:hover {
+  color: chartreuse;
 }

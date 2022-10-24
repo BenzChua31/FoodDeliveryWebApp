@@ -53,6 +53,32 @@ public class Staff extends User {
         this.activated = activated;
     }
 
+    public Staff(int userID, String fname, String lname, String pass, String email, int phoneNo, Date dob,
+                 int streetNo, String streetName, int postcode, String state, String suburb, String country,
+                 Boolean activated, int staffID, int restaurantID, int privilege, String position) {
+        super(userID, fname, lname, pass, email, phoneNo, dob, streetNo, streetName, postcode, state, suburb, country,
+                activated);
+        this.staffID = staffID;
+        this.restaurantID = restaurantID;
+        this.privilege = privilege;
+        this.position = position;
+
+        this.UserID = userID;
+        this.fname = fname;
+        this.lname = lname;
+        this.pass = pass;
+        this.email = email;
+        this.phoneNo = phoneNo;
+        this.dob = dob;
+        this.streetNo = streetNo;
+        this.streetName = streetName;
+        this.postcode = postcode;
+        this.state = state;
+        this.suburb = suburb;
+        this.country = country;
+        this.activated = activated;
+    }
+
     public int getStaffID() {
         return this.staffID;
     }

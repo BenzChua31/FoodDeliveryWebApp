@@ -1,3 +1,4 @@
+-- Active: 1662196093279@@127.0.0.1@3306@db
 DROP DATABASE IF EXISTS db;
 CREATE DATABASE db;
 
@@ -215,7 +216,6 @@ CREATE TABLE Driver
     User_ID INT UNSIGNED NOT NULL,
     Number_Plate VARCHAR(10) NOT NULL UNIQUE,
     Vehicle_Description VARCHAR(20) NOT NULL,
-    Rating FLOAT,
     D_Account_Name VARCHAR(20) NOT NULL,
     D_BSB INT NOT NULL,
     D_Account_Number INT NOT NULL,
@@ -283,6 +283,53 @@ INSERT INTO DB.ORDER VALUES(101010, 202020, 303030, "Delivery", NULL, "Order Rec
 INSERT INTO ORDER_ITEM VALUES(101010, 321321, 1, "");
 INSERT INTO DB.ORDER VALUES(111111, 202020, 303030, "Delivery", NULL, "Preparing", NULL, "Give me your money", NULL);
 
-
 INSERT INTO ORDER_ITEM VALUES(111111, 321321, 2, "No Chili");
-INSERT INTO DRIVER VALUES(454545, 989898, "AXY562", "Black Toyota", NULL, "CommBank", 117268, 45128935);
+INSERT INTO DRIVER VALUES(454545, 989898, "AXY562", "Black Toyota", "CommBank", 117268, 45128935);
+
+--User
+INSERT INTO user (First_Name, Last_Name, Password, Email, PhoneNo, DOB, Street_Number, Street_Name, Postcode, State, Suburb, Country, Activated)
+VALUES ('Timothy', 'Chan', '1234', 'tc@gmail.com', 1234567890, '2000-01-01', 1, 't Street', 2000, 'NSW', 'City', 'Australia', TRUE);
+
+--Customer
+INSERT INTO customer (User_ID, Card_Number, Card_Expiration, Card_Pin, Card_Name)
+VALUES(989899, 3456789, '2002-01-01', 123, 'T Chan');
+
+--Restaraunt
+INSERT INTO restaurant (Restaurant_Name, Image_Reference, Street_Number, Street_Name, Postcode, State, Suburb, Country, Activated, ABN, Account_Name, BSB, Account_Number)
+VALUES('OFC', 'ofc.png', 11, 'Hungry', 2000, 'NSW', 'City', 'Australia', TRUE, 1000000, 'OFC Street', 3333, 2222);
+
+--Menu item
+
+--Burger 
+INSERT INTO menu_item (Restaurant_ID, Item_Type, Servings, Price, Calories, Image, Description, Ingredients, Allergy, Stock)
+VALUES(303031, 'Burger', 303030, 10.00, 200, 'Chicken Burger', 'Chicken Burger', 'Fried Chicken, Buns, Lettuce, Ketchup, Mayo', 'None', 100);
+
+--Drink
+INSERT INTO menu_item (Restaurant_ID, Item_Type, Servings, Price, Calories, Image, Description, Ingredients, Allergy, Stock)
+VALUES(303031, 'Drink', 303030, 2.00, 10, 'Coca cola', 'Coca cola', 'Coca cola', 'None', 100);
+
+-- Side
+INSERT INTO menu_item (Restaurant_ID, Item_Type, Servings, Price, Calories, Image, Description, Ingredients, Allergy, Stock)
+VALUES(303031, 'Side', 303030, 5.00, 100, 'Chips', 'Chips', 'Potato, Salt', 'None', 100);
+
+--Order
+INSERT INTO db.Order (Customer_ID, Restaurant_ID, Order_Type, Coupon_ID, Status, Food_Rating, Food_Instructions, Food_Feedback)
+VALUES(202021, 303031, 'Delivery', NULL, 'Accepted', NULL, NULL, NULL);
+
+--Order Item
+INSERT INTO order_item (Order_ID, Item_ID, Quantity, Comment)
+VALUES(111112, 321321, 1, NULL);
+
+INSERT INTO order_item (Order_ID, Item_ID, Quantity, Comment)
+VALUES(111112, 321321, 2, NULL);
+
+INSERT INTO order_item (Order_ID, Item_ID, Quantity, Comment)
+VALUES(111112, 321321, 1, NULL);
+
+-- SELECT Order_ID FROM db.Order ORDER BY Order_ID DESC LIMIT 1
+
+-- Select * from db.Order;
+
+SELECT Order_ID FROM db.Order ORDER BY Order_ID DESC LIMIT 1;
+
+SELECT * FROM Order_ITEM WHERE Order_ID = 1;

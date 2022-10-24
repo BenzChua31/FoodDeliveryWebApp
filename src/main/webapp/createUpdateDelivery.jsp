@@ -14,8 +14,10 @@
             <%
                 // for testing
                 session.setAttribute("user", new User(989898, "Minh Quan", "Tran"));
+                request.setAttribute("orderID", 101010);
 
                 User user = (User) session.getAttribute("user");
+                int orderID = (int) request.getAttribute("orderID");
             %>
 
             <div class="header-content">
@@ -44,22 +46,36 @@
             <div class="header-outline"></div>
         </header>
         <main>
-            <form action="create-delivery" method="post">
+            <form action="create-update-delivery" method="post">
+                <input name="orderID" value="<%= orderID %>" type="hidden"/>
                 <h1>Delivery details</h1>
+                <hr />
+                <h3>
+                    Order no <%= orderID %>
+                    <% if (session.getAttribute("orderErr") != null) {%>
+                        <span class="warning-text"><%= session.getAttribute("orderErr") %></span>
+                    <% } %>
+                </h3>
                 <hr />
                 <label>Order type</label>
                 <ul id="order-type">
                     <li>
-                        <input type="radio" id="delivery" name="order-type" value="Delivery" required>
-                        <label for="delivery">Delivery</label>
+                        <label>
+                            <input type="radio" id="delivery" name="order-type" value="Delivery" required checked>
+                            Delivery
+                        </label>
                     </li>
                     <li>
-                        <input type="radio" id="pickup" name="order-type" value="Pickup" required>
-                        <label for="pickup">Pickup</label>
+                        <label>
+                            <input type="radio" id="pickup" name="order-type" value="Pickup" required>
+                            Pickup
+                        </label>
                     </li>
                     <li>
-                        <input type="radio" id="dinein" name="order-type" value="Dinein" required>
-                        <label for="dinein">Dine-in</label>
+                        <label>
+                            <input type="radio" id="dinein" name="order-type" value="Dinein" required>
+                            Dine-in
+                        </label>
                     </li>
                 </ul>
                 <hr />
@@ -72,20 +88,17 @@
                         <input type="text" id="suburb" name="suburb" required>
                         <label for="state">State
                             <% if (session.getAttribute("stateErr") != null) {%>
-                            <span class="warning-text"><%=session.getAttribute("stateErr")%></span>
-                            <% session.setAttribute("stateErr", null);
-                            } %>
+                                <span class="warning-text"><%= session.getAttribute("stateErr") %></span>
+                            <% } %>
                         </label>
                         <input type="text" id="state" name="state" required>
                         <label for="postal">Postal Code
                             <% if (session.getAttribute("postalErr") != null) {%>
-                            <span class="warning-text"><%=session.getAttribute("postalErr")%></span>
-                            <% session.setAttribute("postalErr", null);
-                            }%>
+                                <span class="warning-text"><%= session.getAttribute("postalErr") %></span>
+                            <% }%>
                         </label>
                         <input type="text" id="postal" name="postal" required>
                     </div>
-                    <hr />
                     <label for="instructions">Instructions</label>
                     <textarea id="instructions" name="instructions" maxlength="100" rows="4"></textarea>
                     <hr />

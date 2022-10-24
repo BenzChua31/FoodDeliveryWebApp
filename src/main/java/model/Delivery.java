@@ -154,4 +154,13 @@ public class Delivery {
         this.driverTip = driverTip;
     }
 
+    @Override
+    public String toString() {
+        return "Delivery [deliveryID=" + deliveryID + ", orderID=" + orderID + ", driverID=" + driverID
+                + ", deliveryStreet=" + deliveryStreet + ", deliverySuburb=" + deliverySuburb + ", deliveryState="
+                + deliveryState + ", deliveryPostal=" + deliveryPostal + ", deliveryFee=" + deliveryFee
+                + ", driverRating=" + driverRating + ", driverInstructions=" + driverInstructions + ", driverFeedback="
+                + driverFeedback + ", driverTip=" + driverTip + "]";
+    }
+
 }
