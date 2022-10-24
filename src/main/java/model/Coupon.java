@@ -9,7 +9,7 @@ public class Coupon {
 
     private Integer couponScope;
 
-    private Integer couponMinMoney;
+    private Double couponMinMoney;
 
     private Date createdDate;
 
@@ -18,6 +18,18 @@ public class Coupon {
     private String couponDescription;
 
     private String couponImage;
+
+    public Coupon(){}
+
+    public Coupon(String couponName, Integer couponScope, Double couponMinMoney, Date createdDate, Double couponValue, String couponDescription, String couponImage) {
+        this.couponName = couponName;
+        this.couponScope = couponScope;
+        this.couponMinMoney = couponMinMoney;
+        this.createdDate = createdDate;
+        this.couponValue = couponValue;
+        this.couponDescription = couponDescription;
+        this.couponImage = couponImage;
+    }
 
     public Integer getCouponId() {
         return couponId;
@@ -43,11 +55,11 @@ public class Coupon {
         this.couponScope = couponScope;
     }
 
-    public Integer getCouponMinMoney() {
+    public Double getCouponMinMoney() {
         return couponMinMoney;
     }
 
-    public void setCouponMinMoney(Integer couponMinMoney) {
+    public void setCouponMinMoney(Double couponMinMoney) {
         this.couponMinMoney = couponMinMoney;
     }
 
