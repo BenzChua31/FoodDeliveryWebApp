@@ -39,6 +39,9 @@
         {
             $("#create-form").trigger("reset");
             $("#create-form").removeClass("was-validated");
+            $("#scope-new-row").css('display', 'none');
+            $("#inputScopeRes").removeAttr('required');
+            $("#inputScopeItem").removeAttr('required');
         }
 
         function showCouponsToDataTable()
