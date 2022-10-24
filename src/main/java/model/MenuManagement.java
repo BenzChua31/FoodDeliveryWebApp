@@ -19,15 +19,16 @@ public class MenuManagement {
     return categories;
    }
    
-   public Menu AddMenu(String name, String price, String category) {
+   public Menu AddMenu(String name, String price, String calories, String description, String ingredients, String category) {
     float floatPrice = Float.parseFloat(price);
+    int intCalories = Integer.parseInt(calories);
     MenuCategory tempCat;
     System.out.println("Category name:" + category);
     for(MenuCategory cat : categories ) {
         System.out.println("Cat:" + cat.GetName());
         if(cat.GetName().equals(category)) {
             tempCat = cat;
-            Menu newMenu = new Menu(name, floatPrice, tempCat);
+            Menu newMenu = new Menu(name, floatPrice, intCalories, description, ingredients, tempCat);
             menus.add(newMenu);
             return newMenu;
         }

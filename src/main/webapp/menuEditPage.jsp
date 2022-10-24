@@ -19,8 +19,8 @@
   </head>
  
   <%
-    Staff staff = (Staff) session.getAttribute("staff");
-      MenuManagement me = staff.GetMenuManagement();
+      Restaurant resto = (Restaurant)session.getAttribute("currentResto");
+      MenuManagement me = resto.GetMenuManagement();
       List<MenuCategory> categories = me.GetAllCategories();
    %>
    
