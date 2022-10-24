@@ -4,8 +4,7 @@
 <%@page import="java.sql.SQLException"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="model.*" %>
-<%@ page import="java.util.*" %>
+<%@ page import="model.MenuItem" %>
 <%@ page import="controller.*" %>
 
 <!DOCTYPE html>
@@ -41,35 +40,24 @@
     </tr>
 
 <%
-	//Iterator<MenuItem> iterator = menuItems.iterator();
-    MenuManagement me;
-    if(session.getAttribute("currentResto") != null){
-        Restaurant resto = (Restaurant) session.getAttribute("currentResto");
-        me = resto.GetMenuManagement();
-    }
-    else {
-        me = new MenuManagement();
-    }
+	Iterator<MenuItem> iterator = menuItems.iterator();  
 	
-    
-    List<Menu> menus = me.GetAllMenus();
-	//while(iterator.hasNext())  
-    for(Menu menu : menus)
+	while(iterator.hasNext())  
 	{
-		//MenuItem menuItem = iterator.next(); 
+		MenuItem menuItem = iterator.next(); 
 	%>
     <tr>
-    <td><%=menu.GetName()%></td>
-    <td>1</td>
-    <td><%=menu.GetPrice()%></td>
-    <td><%=menu.getCalories()%></td>
-    <td><img src="" width="100" /></td>
-    <td><%=menu.getDescription()%></td>
-    <td><%=menu.getIngredients()%></td>
-    <td>None</td>
-    <td>ID?</td>
+    <td><%=menuItem.getItemType()%></td>
+    <td><%=menuItem.getServings()%></td>
+    <td><%=menuItem.getPrice()%></td>
+    <td><%=menuItem.getCalories()%></td>
+    <td><img src="<%=menuItem.getImage()%>" width="100" /></td>
+    <td><%=menuItem.getDescription()%></td>
+    <td><%=menuItem.getIngredients()%></td>
+    <td><%=menuItem.getAllergy()%></td>
+    <td><%=menuItem.getItemID()%></td>
     <form action="add-menuItem" method="POST">
-        <input type="hidden" name="MenuItemID" value="<%= menu.GetName()%>">
+        <input type="hidden" name="MenuItemID" value="<%= menuItem.getItemID()%>">
         <td><input type="number" name="quantity" value="1"></td>
         <td><textarea name="comment"></textarea></td>
         <td><button type="submit" value="Submit">Add</button></td>
@@ -77,6 +65,7 @@
 
     </tr>
 
+    <!-- <p><%=menuItem.getItemType()%></p> -->
     
 	<%
 	}
