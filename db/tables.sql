@@ -140,7 +140,7 @@ CREATE TABLE Coupon
     Coupon_ID INT PRIMARY KEY AUTO_INCREMENT,
     Coupon_Name VARCHAR(255) NOT NULL,
     Coupon_Scope INT NOT NULL,
-    Coupon_Min_Money INT NOT NULL,
+    Coupon_Min_Money DOUBLE NOT NULL,
     Created_Date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     Coupon_Value DOUBLE NOT NULL,
     Coupon_Description VARCHAR(255) NOT NULL,
