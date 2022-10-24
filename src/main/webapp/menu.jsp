@@ -35,6 +35,8 @@
         <th>Ingredients</th>
         <th>Allergy</th>
         <th>ID</th>
+        <th>Quantity</th>
+        <th>Comment</th>
     </tr>
 
 <%
@@ -49,12 +51,17 @@
     <td><%=menuItem.getServings()%></td>
     <td><%=menuItem.getPrice()%></td>
     <td><%=menuItem.getCalories()%></td>
-    <td><%=menuItem.getImage()%></td>
+    <td><img src="<%=menuItem.getImage()%>" width="100" /></td>
     <td><%=menuItem.getDescription()%></td>
     <td><%=menuItem.getIngredients()%></td>
     <td><%=menuItem.getAllergy()%></td>
     <td><%=menuItem.getItemID()%></td>
-    <td><a href="add-menuItem?MenuItemID=<%= menuItem.getItemID()%>"  class="btn btn-dark text-light ms-2"> Add</a></td>
+    <form action="add-menuItem" method="POST">
+        <input type="hidden" name="MenuItemID" value="<%= menuItem.getItemID()%>">
+        <td><input type="number" name="quantity" value="1"></td>
+        <td><textarea name="comment"></textarea></td>
+        <td><button type="submit" value="Submit">Add</button></td>
+    </form>
 
     </tr>
 

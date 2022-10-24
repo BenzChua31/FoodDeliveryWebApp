@@ -19,6 +19,7 @@ public class Restaurant {
     private String accountName;
     private int bsb;
     private int accountNum;
+    private MenuManagement menuManagement = new MenuManagement();
 
     // For DBManager to use to fill in info + categories and passed to the controller fo use.
     public Restaurant(int restaurantID, String imageReference, String restaurantName,
@@ -212,6 +213,14 @@ public class Restaurant {
 
     public void setAccountNum(int accountNum) {
         this.accountNum = accountNum;
+    }
+
+    public MenuManagement GetMenuManagement() {
+        if(menuManagement == null) {
+           menuManagement = new MenuManagement();
+        }
+
+        return menuManagement;
     }
 
 }
