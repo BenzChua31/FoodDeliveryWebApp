@@ -1,4 +1,6 @@
+<%@page import="dao.DBManager"%>
 <%@page import="model.Staff"%>
+<%@page import="model.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -8,14 +10,23 @@
         <link href="./css/storeOrder.css" rel="stylesheet" type="text/css" >
         <link href="./css/header.css" rel="stylesheet" type="text/css" >
         <script src="./js/storeOrder.js" defer></script>
+        <script src="./js/updateData.js" defer></script>
         <title>Delivery Status</title>
     </head>
     <body>
         <%
             // for testing
-            session.setAttribute("staffeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXNzYWdlIjoiSldUIFJ1bGVzISIsImlhdCI6MTQ1OTQ0ODExOSwiZXhwIjoxNDU5NDU0NTE5fQ.-yIVBD5b73C75osbmwwshQNRC7frWUYrqaTjTpza2y4", new Staff(989898, "Minh Quan", "Tran", "ABC", "ASLDA", 12131, null, 131, "141", 1341, "SAD", "RLQK", "ASDKLJ", true, 123123, 303030, 1, ""));
+            // session.setAttribute("staffeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXNzYWdlIjoiSldUIFJ1bGVzISIsImlhdCI6MTQ1OTQ0ODExOSwiZXhwIjoxNDU5NDU0NTE5fQ.-yIVBD5b73C75osbmwwshQNRC7frWUYrqaTjTpza2y4", new Staff(989898, "Minh Quan", "Tran", "ABC", "ASLDA", 12131, null, 131, "141", 1341, "SAD", "RLQK", "ASDKLJ", true, 123123, 303030, 1, ""));
 
-            Staff staff = (Staff) session.getAttribute("staffeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXNzYWdlIjoiSldUIFJ1bGVzISIsImlhdCI6MTQ1OTQ0ODExOSwiZXhwIjoxNDU5NDU0NTE5fQ.-yIVBD5b73C75osbmwwshQNRC7frWUYrqaTjTpza2y4");
+            // Staff staff = (Staff) session.getAttribute("staffeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZXNzYWdlIjoiSldUIFJ1bGVzISIsImlhdCI6MTQ1OTQ0ODExOSwiZXhwIjoxNDU5NDU0NTE5fQ.-yIVBD5b73C75osbmwwshQNRC7frWUYrqaTjTpza2y4");
+
+            // for testing
+            session.setAttribute("user", new User(989898, "Minh Quan", "Tran"));
+
+            User user = (User) session.getAttribute("user");
+            DBManager manager = (DBManager) session.getAttribute("manager");
+            Staff staff = manager.getStaff(user.getUserID());
+            session.setAttribute("staff", staff);
         %>
 
         <header>
@@ -30,7 +41,7 @@
                             <span>Hello, <%= staff.getFname()%></span>
                             <div class="user-menu">
                                 <a class="header-button" href="">View Account Details</a>
-                                <a class="header-button" href="">View Orders</a>
+                                <a class="header-button" href="storeReview.jsp">View Reviews</a>
                                 <a class="header-button" href="">Logout</a>
                             </div>
                         <% } else { %>
@@ -46,24 +57,26 @@
         </header>
                         
         <main>
-            <%-- <div class="grid-item" id="-orderID-">
-                <div class="order-header">
-                    <button class="order-cancel" onclick="cancelOrder(-orderID-)">Cancel</button> 
-                    <h3 class="order-no">Order -orderID-</h3>
-                    <button class="order-done" onclick="doneOrder(-orderID-)">Done</button> 
-                </div>
-                <table class="food-list">
-                    <tr>
-                        <td>
-                            -name-
-                            <br />
-                            &ensp;* -comment-
-                        </td>
-                        <td>x-quantity-</td>
-                    </tr>
-                </table>
-                <p class="instructions">-instructions-</p>
-            </div> --%>
+            <div>
+                <%-- <div class="grid-item" id="-orderID-">
+                    <div class="order-header">
+                        <button class="order-cancel" onclick="updateOrder(-orderID-, 'Cancel')">Cancel</button> 
+                        <h3 class="order-no">Order -orderID-</h3>
+                        <button class="order-done" onclick="updateOrder(-orderID-, 'Prepared')">Done</button> 
+                    </div>
+                    <table class="food-list">
+                        <tr>
+                            <td>
+                                -name-
+                                <br />
+                                &ensp;* -comment-
+                            </td>
+                            <td>x-quantity-</td>
+                        </tr>
+                    </table>
+                    <p class="instructions">-instructions-</p>
+                </div> --%>
+            </div>
         </main>
     </body>
 </html>

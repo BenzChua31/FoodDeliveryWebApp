@@ -2,10 +2,24 @@ package dao;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import model.*;
+import com.mysql.cj.protocol.Resultset;
+import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
+
+import model.AppStaff;
+import model.Customer;
+import model.Delivery;
+import model.DeliveryDriver;
+import model.MenuItem;
+import model.Order;
+import model.OrderItem;
+import model.Restaurant;
+import model.Staff;
+import model.User;
+
 
 public class DBManager {
 
@@ -14,40 +28,450 @@ public class DBManager {
     public DBManager(Connection conn) throws SQLException {
         this.conn = conn;
     }
-
+/* 
     public void testAdder(String firstName, String lastName) {
-        String fetch = "INSERT INTO db.tables.Customer " + "VALUES (" + firstName + ", '" + lastName + "')";
+        fetch = "INSERT INTO db.tables.Customer " + "VALUES (" + firstName + ", '" + lastName + "')";
+        System.out.println(fetch);
+        ps.executeUpdate();
+
+    }
+*/
+    public void addUser(String firstName, String lastName, String password, String email, int phoneNumber, String dob, int streetNumber, String streetName, int postcode, String state, String suburb, String country, boolean activated) throws SQLException {
+       // fetch = "INSERT INTO db.user " + "VALUES (" + 000123 + ",'" + firstName + "', '" + lastName + "', '" + password + "', '" + email + "', '" + phoneNumber + "', '" + dob + "', '" + streetNumber + "', '" + streetName + "', '" + postcode + "', '" + state + "', '" + suburb + "', '" + country + "', " + 1 + ")";
+       // System.out.println("made it to addUser in dbmanager");
+        
+        String fetch = "insert into db.user(first_name, last_name, password, email, phoneNo, dob, street_number, street_name, postcode, state, suburb, country, activated) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+ 
+        PreparedStatement ps = conn.prepareStatement(fetch);
+        ps.setString(1, firstName);
+        ps.setString(2, lastName);
+        ps.setString(3, password);
+        ps.setString(4, email);
+        ps.setInt(5, phoneNumber);
+        ps.setString(6, dob);
+        ps.setInt(7, streetNumber);
+        ps.setString(8, streetName);
+        ps.setInt(9, postcode);
+        ps.setString(10, state);
+        ps.setString(11, suburb);
+        ps.setString(12, country);
+        ps.setBoolean(13, activated);
+        System.out.println(fetch);
+        ps.executeUpdate();
+
+    }
+
+    public void addStaff(String firstName, String lastName, String password, String email, String phoneNumber, String dob, String streetNumber, String streetName, String postcode, String state, String suburb, String country, boolean activated, int privilege, String position) throws SQLException {
+        String fetch = "INSERT INTO db.tables.Staff " + "VALUES (" + firstName + ", '" + lastName + "', '" + password + "', '" + email + "', '" + phoneNumber + "', '" + dob + "', '" + streetNumber + "', '" + streetName + "', '" + postcode + "', '" + state + "', '" + suburb + "', '" + country + "', '" + activated + "', '" + privilege + "', '" + position + "')";
+        
         System.out.println(fetch);
     }
 
-    public void addCustomer(String firstName, String lastName, String password, String email, String phoneNumber,
-            String dob, String streetNumber, String streetName, String postcode, String state, String suburb,
-            String country, boolean activated, String cardNumber, String cardExpiration, int cardPin, String cardName)
-            throws SQLException {
-        String fetch = "INSERT INTO db.tables.Customer " + "VALUES (" + firstName + ", '" + lastName + "', '" + password
-                + "', '" + email + "', '" + phoneNumber + "', '" + dob + "', '" + streetNumber + "', '" + streetName
-                + "', '" + postcode + "', '" + state + "', '" + suburb + "', '" + country + "', '" + activated + "', '"
-                + cardNumber + "', '" + cardExpiration + "', '" + cardPin + "', '" + cardName + "')";
-        System.out.println(fetch);
+    public Customer findCustomer(String Cemail, String Cpassword) throws SQLException {
+
+        String fetch = "select * from db.user where email='" + Cemail + "' and Password= '" + Cpassword + "'";
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(fetch);
+        
+        if (!rs.next()) {
+            return null;
+        }
+
+        //rs.next();
+        String email = rs.getString(5);
+        String password = rs.getString(4);
+
+        if (email.equals(Cemail) && password.equals(Cpassword)) {
+            System.out.println("Customer Found!!");
+            int userID = rs.getInt(1);
+            String firstName = rs.getString(2);
+            String lastName = rs.getString(3);
+            password = rs.getString(4);
+            email = rs.getString(5);
+            int phone = rs.getInt(6);
+            
+            String dateOfBirth = rs.getString(7);
+            LocalDate localDate = LocalDate.parse(dateOfBirth);
+            int streetNumber = rs.getInt(8);
+            String streetName = rs.getString(9);
+            int postcode = rs.getInt(10);
+            String state = rs.getString(11);
+            String suburb = rs.getString(12);
+            String country = rs.getString(13);
+            boolean activated = rs.getBoolean(14);
+            
+            fetch = "select * from db.customer where user_ID=" + userID;
+            rs = st.executeQuery(fetch);
+            rs.next();
+
+            int customerID = rs.getInt(1);
+            String cardNumber = rs.getString(3);
+            String cardExpiration = rs.getString(4);
+            LocalDate localDate2 = LocalDate.parse(cardExpiration);
+            int cardPin = rs.getInt(5);
+            String cardName = rs.getString(6);
+            return new Customer(userID, firstName, lastName, password, email, phone, localDate, streetNumber, streetName, postcode, state, suburb, country, activated, customerID, cardNumber, localDate2, cardPin, cardName);
+            
+        }
+
+        else {
+           System.out.println("DBMANAGER USER NOT FOUND FROM FINDUSER METHOD");
+            return null; 
+        }
+        
+        
     }
 
-    // Staff
-    public void addStaff(String firstName, String lastName, String password, String email, String phoneNumber,
-            String dob, String streetNumber, String streetName, String postcode, String state, String suburb,
-            String country, boolean activated, int privilege, String position) throws SQLException {
-        String fetch = "INSERT INTO db.tables.Staff " + "VALUES (" + firstName + ", '" + lastName + "', '" + password
-                + "', '" + email + "', '" + phoneNumber + "', '" + dob + "', '" + streetNumber + "', '" + streetName
-                + "', '" + postcode + "', '" + state + "', '" + suburb + "', '" + country + "', '" + activated + "', '"
-                + privilege + "', '" + position + "')";
-        System.out.println(fetch);
+    public void addPaymentDetails(int userID, int cardNumber, String cardExpiration, int cardPin, String cardName) throws SQLException {
+        // find the user and get their user id 
+
+        String fetch = "insert into db.customer(user_id, card_number, card_expiration, card_pin, card_name) values(?, ?, ?, ?, ?)";
+        PreparedStatement ps = conn.prepareStatement(fetch);
+        ps.setInt(1, userID);
+        ps.setInt(2, cardNumber);
+        ps.setString(3, cardExpiration);
+        ps.setInt(4, cardPin);
+        ps.setString(5, cardName);
+
+        ps.executeUpdate();
+
     }
 
-    public Customer findCustomer(String email, String password) {
+    public User findUser(String email, String password) throws SQLException{
+        String fetch = "select * from db.user where email='" + email + "' and Password= '" + password + "'";
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(fetch);
+   
+        while (rs.next()) {
+            String custEmail = rs.getString(5);
+            String custPassword = rs.getString(4);
+            if (custEmail.equals(email) && custPassword.equals(password)) {
+                System.out.println("Customer Found!!");
+                int userID = rs.getInt(1);
+                String firstName = rs.getString(2);
+                String lastName = rs.getString(3);
+                custPassword = rs.getString(4);
+                custEmail = rs.getString(5);
+                int phone = rs.getInt(6);
+                
+                String dateOfBirth = rs.getString(7);
+                LocalDate localDate = LocalDate.parse(dateOfBirth);
+                
+                int streetNumber = rs.getInt(8);
+                String streetName = rs.getString(9);
+                int postcode = rs.getInt(10);
+                String state = rs.getString(11);
+                String suburb = rs.getString(12);
+                String country = rs.getString(13);
+                boolean activated = rs.getBoolean(14);
+                
+                return new User(userID, firstName, lastName, custPassword, custEmail, phone, localDate, streetNumber, streetName, postcode, state, suburb, country, activated);
+                
+            }
+        }
+
         return null;
     }
 
-    public Staff findStaff(String email, String password) {
+    public void addStaffDetails(String email, int restaurantID, int privilege, String position) throws SQLException{
+        String fetch = "SELECT * FROM `User` WHERE Email='"+ email + "';";
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(fetch);
+        rs.next();
+        int userID = rs.getInt(1);
+
+        fetch = "insert into db.staff(userID, restaurant_ID, privilege, position) values(?, ?, ?, ?)";
+        PreparedStatement ps = conn.prepareStatement(fetch);
+        ps.setInt(1, userID);
+        ps.setInt(2, restaurantID);
+        ps.setInt(3, privilege);
+        ps.setString(4, position);
+
+        ps.executeUpdate();
+    }
+
+    public void addPaymentDetails(String email, String cardNumber, String cardExpiration, int cardPin, String cardName) throws SQLException {
+        // find the user and get their user id 
+        System.out.println(email + " is the email being passed into the addPaymentDetails method in manager");
+        String fetch = "SELECT * FROM `User` WHERE Email='"+ email + "';";
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(fetch);
+        rs.next();
+        int userID = rs.getInt(1);
+
+        fetch = "insert into db.customer(user_id, card_number, card_expiration, card_pin, card_name) values(?, ?, ?, ?, ?)";
+        PreparedStatement ps = conn.prepareStatement(fetch);
+        ps.setInt(1, userID);
+        ps.setString(2, cardNumber);
+        ps.setString(3, cardExpiration);
+        ps.setInt(4, cardPin);
+        ps.setString(5, cardName);
+
+        ps.executeUpdate();
+
+    }
+/* 
+    public User findUser(String email, String password) throws SQLException{
+        String fetch = "select * from db.user where email='" + email + "' and Password= '" + password + "'";
+        ResultSet rs = st.executeQuery(fetch);
+   
+        while (rs.next()) {
+            String custEmail = rs.getString(5);
+            String custPassword = rs.getString(4);
+            if (custEmail.equals(email) && custPassword.equals(password)) {
+                System.out.println("Customer Found!!");
+                int userID = rs.getInt(1);
+                String firstName = rs.getString(2);
+                String lastName = rs.getString(3);
+                custPassword = rs.getString(4);
+                custEmail = rs.getString(5);
+                int phone = rs.getInt(6);
+                
+                String dateOfBirth = rs.getString(7);
+                LocalDate localDate = LocalDate.parse(dateOfBirth);
+                
+                int streetNumber = rs.getInt(8);
+                String streetName = rs.getString(9);
+                int postcode = rs.getInt(10);
+                String state = rs.getString(11);
+                String suburb = rs.getString(12);
+                String country = rs.getString(13);
+                boolean activated = rs.getBoolean(13);
+                
+                return new User(userID, firstName, lastName, custPassword, custEmail, phone, localDate, streetNumber, streetName, postcode, state, suburb, country, activated);
+                
+            }
+        }
+
         return null;
+    }
+/* 
+    public void addStaffDetails(String email, int restaurantID, int privilege, String position) throws SQLException{
+        fetch = "SELECT * FROM `User` WHERE Email='"+ email + "';";
+        ResultSet rs = st.executeQuery(fetch);
+        rs.next();
+        int userID = rs.getInt(1);
+
+        fetch = "insert into db.staff(userID, restaurant_ID, privilege, position) values(?, ?, ?, ?)";
+        PreparedStatement ps = conn.prepareStatement(fetch);
+        ps.setInt(1, userID);
+        ps.setInt(2, restaurantID);
+        ps.setInt(3, privilege);
+        ps.setString(4, position);
+
+        ps.executeUpdate();
+    }
+*/
+    public void updateCustomer(int userID, String firstName, String lastName, String password, String email, String phone, String dateOfBirth, int streetNumber, String streetName, int postcode, String state, String suburb, String country, boolean activated, int customerID, int cardNumber, String cardExpiration, int cardPin, String cardName) throws SQLException {
+        
+        String fetch = "UPDATE db.user SET first_name = ?, last_name = ?, password = ?, email = ?, phoneNo = ?, dob = ?, street_number = ?, street_name = ?, postcode = ?, state = ?, suburb = ?, country = ?, activated = ? WHERE userID = ?";
+        PreparedStatement ps = conn.prepareStatement(fetch);
+        ps.setString(1, firstName);
+        ps.setString(2, lastName);
+        ps.setString(3, password);
+        ps.setString(4, email);
+        ps.setString(5, phone);
+        ps.setString(6, dateOfBirth);
+        ps.setInt(7, streetNumber);
+        ps.setString(8, streetName);
+        ps.setInt(9, postcode);
+        ps.setString(10, state);
+        ps.setString(11, suburb);
+        ps.setString(12, country);
+        ps.setInt(13, 1);
+        ps.setInt(14, userID);
+
+        System.out.println(fetch);
+        ps.executeUpdate();
+        System.out.println(ps);
+
+        fetch = "UPDATE db.customer SET card_number = ?, card_expiration = ?, card_pin = ?, card_name = ? WHERE user_id = ?";
+        ps = conn.prepareStatement(fetch);
+        ps.setInt(1, cardNumber);
+        ps.setString(2, cardExpiration);
+        ps.setInt(3, cardPin);
+        ps.setString(4, cardName);
+        ps.setInt(5, userID);
+
+        System.out.println(ps);
+        ps.executeUpdate();
+        
+
+        /*
+         * UPDATE Customers
+         * SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+         * WHERE CustomerID = 1;
+         */
+    }
+
+    // public Customer findCustomer(int CuserID) throws SQLException {
+    //     String fetch = "select * from db.user where UserID=" + CuserID;
+    //     Statement st = conn.createStatement();
+    //     ResultSet rs = st.executeQuery(fetch);
+   
+    //     rs.next();
+    //     String email = rs.getString(5);
+    //     String password = rs.getString(4);
+    //     int userID = rs.getInt(1);
+    //     String firstName = rs.getString(2);
+    //     String lastName = rs.getString(3);
+    //     password = rs.getString(4);
+    //     email = rs.getString(5);
+    //     int phone = rs.getInt(6);
+        
+    //     String dateOfBirth = rs.getString(7);
+    //     LocalDate localDate = LocalDate.parse(dateOfBirth);
+    //     int streetNumber = rs.getInt(8);
+    //     String streetName = rs.getString(9);
+    //     int postcode = rs.getInt(10);
+    //     String state = rs.getString(11);
+    //     String suburb = rs.getString(12);
+    //     String country = rs.getString(13);
+    //     boolean activated = rs.getBoolean(14);
+        
+    //     fetch = "select * from db.customer where user_ID=" + userID;
+    //     rs = st.executeQuery(fetch);
+    //     rs.next();
+    //     int customerID = rs.getInt(1);
+    //     String cardNumber = rs.getString(3);
+    //     String cardExpiration = rs.getString(4);
+    //     LocalDate localDate2 = LocalDate.parse(cardExpiration);
+    //     int cardPin = rs.getInt(5);
+    //     String cardName = rs.getString(6);
+    //     return new Customer(userID, firstName, lastName, password, email, phone, localDate, streetNumber, streetName, postcode, state, suburb, country, activated, customerID, cardNumber, localDate2, cardPin, cardName);
+
+    // } 
+
+    public Staff findStaff(String Semail, String Spassword) throws SQLException {
+
+        String fetch = "select * from db.user where email='" + Semail + "' and Password= '" + Spassword + "'";
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(fetch);
+   
+        if (!rs.next()) {
+            return null;
+        }
+     //   rs.next();
+        String email = rs.getString(5);
+        String password = rs.getString(4);
+
+        if (email.equals(Semail) && password.equals(Spassword)) {
+            System.out.println("Customer Found!!");
+            int userID = rs.getInt(1);
+            String firstName = rs.getString(2);
+            String lastName = rs.getString(3);
+            password = rs.getString(4);
+            email = rs.getString(5);
+            int phone = rs.getInt(6);
+            
+            String dateOfBirth = rs.getString(7);
+            LocalDate localDate = LocalDate.parse(dateOfBirth);
+            int streetNumber = rs.getInt(8);
+            String streetName = rs.getString(9);
+            int postcode = rs.getInt(10);
+            String state = rs.getString(11);
+            String suburb = rs.getString(12);
+            String country = rs.getString(13);
+            boolean activated = rs.getBoolean(14);
+            
+            fetch = "select * from db.staff where userID=" + userID;
+            System.out.println(fetch);
+            rs = st.executeQuery(fetch);
+            if (!rs.next()) {
+                return null;
+            }
+            //rs.next();
+
+            int staffID = rs.getInt(1);
+            int restaurantID = rs.getInt(3);
+            int privilege = rs.getInt(4);
+            String position = rs.getString(5);
+            return new Staff(userID, firstName, lastName, password, email, phone, localDate, streetNumber, streetName, postcode, state, suburb, country, activated, staffID, restaurantID, privilege, position);
+            
+        }
+
+        else {
+           System.out.println("DBMANAGER STAFF NOT FOUND FROM FINDUSER METHOD");
+            return null; 
+        }
+        
+        
+    }
+
+    public void updateStaff(int userID, String firstName, String lastName, String password, String email, int phone, String dateOfBirth, int streetNumber, String streetName, int postcode, String state, String suburb, String country, boolean activated, int staffID, int restauranID, int privilege, String position) throws SQLException {
+        
+        String fetch = "UPDATE db.user SET first_name = ?, last_name = ?, password = ?, email = ?, phoneNo = ?, dob = ?, street_number = ?, street_name = ?, postcode = ?, state = ?, suburb = ?, country = ?, activated = ? WHERE userID = ?";
+        PreparedStatement ps = conn.prepareStatement(fetch);
+        ps.setString(1, firstName);
+        ps.setString(2, lastName);
+        ps.setString(3, password);
+        ps.setString(4, email);
+        ps.setInt(5, phone);
+        ps.setString(6, dateOfBirth);
+        ps.setInt(7, streetNumber);
+        ps.setString(8, streetName);
+        ps.setInt(9, postcode);
+        ps.setString(10, state);
+        ps.setString(11, suburb);
+        ps.setString(12, country);
+        ps.setInt(13, 1);
+        ps.setInt(14, userID);
+
+        System.out.println(fetch);
+        ps.executeUpdate();
+        System.out.println(ps);
+
+        fetch = "UPDATE db.staff SET restaurant_id = ?, privilege = ?, position = ? WHERE userID = ?";
+        ps = conn.prepareStatement(fetch);
+        ps.setInt(1, restauranID);
+        ps.setInt(2, privilege);
+        ps.setString(3, position);
+        ps.setInt(4, userID);
+
+        System.out.println(ps);
+        ps.executeUpdate();
+
+        /*
+         * UPDATE Customers
+         * SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+         * WHERE CustomerID = 1;
+         */
+    }
+
+    public Staff findStaff(int SuserID) throws SQLException {
+
+        String fetch = "select * from db.user where UserID=" + SuserID;
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(fetch);
+   
+        rs.next();
+        String email = rs.getString(5);
+        String password = rs.getString(4);
+        int userID = rs.getInt(1);
+        String firstName = rs.getString(2);
+        String lastName = rs.getString(3);
+        password = rs.getString(4);
+        email = rs.getString(5);
+        int phone = rs.getInt(6);
+        
+        String dateOfBirth = rs.getString(7);
+        LocalDate localDate = LocalDate.parse(dateOfBirth);
+        int streetNumber = rs.getInt(8);
+        String streetName = rs.getString(9);
+        int postcode = rs.getInt(10);
+        String state = rs.getString(11);
+        String suburb = rs.getString(12);
+        String country = rs.getString(13);
+        boolean activated = rs.getBoolean(14);
+        
+        fetch = "select * from db.staff where userID=" + userID;
+        rs = st.executeQuery(fetch);
+        rs.next();
+        int staffID = rs.getInt(1);
+        int restaurantID = rs.getInt(3);
+        int privilege = rs.getInt(4);
+        String position = rs.getString(5);
+        return new Staff(userID, firstName, lastName, password, email, phone, localDate, streetNumber, streetName, postcode, state, suburb, country, activated, staffID, restaurantID, privilege, position);
     }
 
     public boolean validStaffRes(int staffID, int restaurantID) {
@@ -65,14 +489,51 @@ public class DBManager {
         return false;
     }
 
+    public Staff getStaff(int userID) {
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * " +
+                    "FROM Staff INNER JOIN User ON Staff.UserID = User.UserID " +
+                    "WHERE Staff.UserID = " + userID);
+            Staff staff = null;
+            if (rs.next()) {
+                staff = new Staff(
+                        rs.getInt("Staff.UserID"),
+                        rs.getString("User.First_Name"),
+                        rs.getString("User.Last_Name"),
+                        rs.getString("User.Password"),
+                        rs.getString("User.Email"),
+                        rs.getInt("User.PhoneNo"),
+                        rs.getDate("User.DOB"),
+                        rs.getInt("User.Street_Number"),
+                        rs.getString("User.Street_Name"),
+                        rs.getInt("User.Postcode"),
+                        rs.getString("User.State"),
+                        rs.getString("User.Suburb"),
+                        rs.getString("User.Country"),
+                        rs.getBoolean("User.Activated"),
+                        rs.getInt("Staff.Staff_ID"),
+                        rs.getInt("Staff.Restaurant_ID"),
+                        rs.getInt("Staff.Privilege"),
+                        rs.getString("Staff.Position"));
+
+            }
+            return staff;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception is: " + e);
+            return null;
+        }
+    }
+
     // Order
     public Order getOrder(int orderID) {
-        System.out.println("Got here");
         try {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM db.Order WHERE Order_ID = " + orderID);
+            Order order = null;
             if (rs.next()) {
-                return new Order(
+                order = new Order(
                         rs.getInt("ORDER_ID"),
                         rs.getInt("CUSTOMER_ID"),
                         rs.getInt("RESTAURANT_ID"),
@@ -83,11 +544,12 @@ public class DBManager {
                         rs.getString("FOOD_INSTRUCTIONS"),
                         rs.getString("FOOD_FEEDBACK"));
             }
+            return order;
         } catch (Exception e) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
             System.out.println("Exception in getOrder() is: " + e);
+            return null;
         }
-        return null;
     }
 
     public ArrayList<Order> getOrdersByResID(int restaurantID) {
@@ -174,8 +636,9 @@ public class DBManager {
         } catch (Exception e) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
             System.out.println("Exception is: " + e);
+            return null;
         }
-        return null;
+
     }
 
     // Menu_Item
@@ -233,32 +696,41 @@ public class DBManager {
         try {
             Statement st = conn.createStatement();
             st.executeUpdate("UPDATE DELIVERY SET " +
-                    "ORDER_ID = " + delivery.getOrderID() +
-                    ", DRIVER_ID = " + delivery.getDriverID() +
-                    ", DELIVERY_STREET = '" + delivery.getDeliveryStreet() +
-                    "', DELIVERY_SUBURB = '" + delivery.getDeliverySuburb() +
-                    "', DELIVERY_STATE = '" + delivery.getDeliveryState() +
-                    "', DELIVERY_POSTAL = '" + delivery.getDeliveryPostal() +
-                    "', DELIVERY_FEE = " + ((double) Math.round(delivery.getDeliveryFee() * 100) / 100) +
-                    ", DRIVER_RATING = " + delivery.getDriverRating() +
-                    ", DRIVER_INSTRUCTIONS = '" + delivery.getDriverInstructions() +
-                    "', DRIVER_TIP = " + delivery.getDriverTip() +
+                    "Delivery_ID = " + delivery.getDeliveryID() +
+                    ", ORDER_ID = " + delivery.getOrderID() +
+                    ", DRIVER_ID = " + (delivery.getDriverID() != 0 ? delivery.getDriverID() : "NULL") +
+                    ", DELIVERY_STREET = '" + delivery.getDeliveryStreet() + "'" +
+                    ", DELIVERY_SUBURB = '" + delivery.getDeliverySuburb() + "'" +
+                    ", DELIVERY_STATE = '" + delivery.getDeliveryState() + "'" +
+                    ", DELIVERY_POSTAL = '" + delivery.getDeliveryPostal() + "'" +
+                    (delivery.getDeliveryFee() != 0
+                            ? ", DELIVERY_FEE = " + ((double) Math.round(delivery.getDeliveryFee() * 100) / 100)
+                            : "")
+                    +
+                    (delivery.getDriverRating() != 0 ? ", DRIVER_RATING = " + delivery.getDriverRating() : "") +
+                    (delivery.getDriverInstructions() != null
+                            ? ", DRIVER_INSTRUCTIONS = '" + delivery.getDriverInstructions() + "'"
+                            : "")
+                    +
+                    (delivery.getDriverFeedback() != null
+                            ? ", Driver_Feedback = '" + delivery.getDriverFeedback() + "'"
+                            : "")
+                    +
+                    (delivery.getDriverTip() != 0.0 ? ", DRIVER_TIP = " + delivery.getDriverTip() : "") +
                     " WHERE DELIVERY_ID = " + delivery.getDeliveryID());
             return true;
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
             System.out.println("Exception is: " + e);
             return false;
         }
     }
 
-    public Delivery getDelivery(int orderID) {
+    public Delivery getDelivery(int deliveryID) {
         try {
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM DELIVERY WHERE ORDER_ID = " + orderID);
-            while (rs.next()) {
+            ResultSet rs = st.executeQuery("SELECT * FROM DELIVERY WHERE Delivery_ID = " + deliveryID);
+            if (rs.next()) {
                 Delivery delivery = new Delivery(
                         rs.getInt("DELIVERY_ID"),
                         rs.getInt("ORDER_ID"),
@@ -281,15 +753,112 @@ public class DBManager {
         return null;
     }
 
+    public Delivery getDeliveryByOrderID(int orderID) {
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM DELIVERY WHERE ORDER_ID = " + orderID);
+            if (rs.next()) {
+                Delivery delivery = new Delivery(
+                        rs.getInt("DELIVERY_ID"),
+                        rs.getInt("ORDER_ID"),
+                        rs.getInt("DRIVER_ID"),
+                        rs.getString("DELIVERY_STREET"),
+                        rs.getString("DELIVERY_SUBURB"),
+                        rs.getString("DELIVERY_STATE"),
+                        rs.getString("DELIVERY_POSTAL"),
+                        rs.getFloat("DELIVERY_FEE"),
+                        rs.getInt("DRIVER_RATING"),
+                        rs.getString("DRIVER_INSTRUCTIONS"),
+                        rs.getString("DRIVER_FEEDBACK"),
+                        rs.getFloat("DRIVER_TIP"));
+                return delivery;
+            }
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception in getDeliveryByOrderID() is: " + e);
+        }
+        return null;
+    }
+
+    public ArrayList<Delivery> getDeliveriesByDriverID(int driverID) {
+        try {
+            Statement st = conn.createStatement();
+            ArrayList<Delivery> deliveries = new ArrayList<Delivery>();
+            ResultSet rs = st.executeQuery("SELECT * FROM Delivery " +
+                    " WHERE Driver_ID = " + driverID);
+            while (rs.next()) {
+                deliveries.add(new Delivery(
+                        rs.getInt("Delivery_ID"),
+                        rs.getInt("Order_ID"),
+                        rs.getInt("Driver_ID"),
+                        rs.getString("Delivery_Street"),
+                        rs.getString("Delivery_Suburb"),
+                        rs.getString("Delivery_State"),
+                        rs.getString("Delivery_Postal"),
+                        rs.getFloat("Delivery_Fee"),
+                        rs.getInt("Driver_Rating"),
+                        rs.getString("Driver_Instructions"),
+                        rs.getString("Driver_Feedback"),
+                        rs.getFloat("Driver_Tip")));
+            }
+            return deliveries;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception in getDeliveriesByDriverID() is: " + e);
+        }
+        return null;
+    }
+
+    public ArrayList<Delivery> getAvailableDeliveries() {
+        try {
+            Statement st = conn.createStatement();
+            ArrayList<Delivery> deliveries = new ArrayList<Delivery>();
+            ResultSet rs = st.executeQuery("SELECT * FROM Delivery WHERE Driver_ID IS NULL");
+            while (rs.next()) {
+                deliveries.add(new Delivery(
+                        rs.getInt("Delivery_ID"),
+                        rs.getInt("Order_ID"),
+                        rs.getInt("Driver_ID"),
+                        rs.getString("Delivery_Street"),
+                        rs.getString("Delivery_Suburb"),
+                        rs.getString("Delivery_State"),
+                        rs.getString("Delivery_Postal"),
+                        rs.getFloat("Delivery_Fee"),
+                        rs.getInt("Driver_Rating"),
+                        rs.getString("Driver_Instructions"),
+                        rs.getString("Driver_Feedback"),
+                        rs.getFloat("Driver_Tip")));
+            }
+            return deliveries;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception in getAvailableDeliveries() is: " + e);
+            return null;
+        }
+    }
+
+    public boolean deleteDelivery(int deliveryID) {
+        try {
+            Statement st = conn.createStatement();
+            st.executeUpdate("DELETE FROM Delivery WHERE Delivery_ID = " + deliveryID);
+            return true;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception in deleteDelivery() is: " + e);
+            return false;
+        }
+    }
+
     // Driver
-    public DeliveryDriver getDriver(User user) {
+    public DeliveryDriver getDriver(int userID) {
         try {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * " +
                     "FROM Driver INNER JOIN User ON Driver.User_ID = User.UserID " +
-                    "WHERE Driver.User_ID = " + user.getUserID());
-            while (rs.next()) {
-                DeliveryDriver driver = new DeliveryDriver(
+                    "WHERE Driver.User_ID = " + userID);
+            DeliveryDriver driver = null;
+            if (rs.next()) {
+                driver = new DeliveryDriver(
                         rs.getInt("User.UserID"),
                         rs.getString("User.First_Name"),
                         rs.getString("User.Last_Name"),
@@ -307,22 +876,54 @@ public class DBManager {
                         rs.getInt("Driver.Driver_ID"),
                         rs.getString("NUMBER_PLATE"),
                         rs.getString("VEHICLE_DESCRIPTION"),
-                        rs.getFloat("RATING"),
                         rs.getString("D_ACCOUNT_NAME"),
                         rs.getInt("D_BSB"),
                         rs.getInt("D_ACCOUNT_NUMBER"));
-                return driver;
             }
+            return driver;
         } catch (Exception e) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
             System.out.println("Exception is: " + e);
+            return null;
         }
-        return null;
+    }
+
+    public double getDriverRating(int driverID) {
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st
+                    .executeQuery("SELECT AVG(Driver_Rating) FROM Delivery WHERE Delivery.Driver_ID = " + driverID);
+            if (rs.next()) {
+                return rs.getDouble("AVG(Driver_Rating)");
+            }
+            return 0;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception is: " + e);
+            return 0;
+        }
+    }
+
+    // Restaurent
+    public double getResRating(int restaurantID) {
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs = st
+                    .executeQuery(
+                            "SELECT AVG(Food_Rating) FROM db.Order WHERE db.Order.Restaurant_ID = " + restaurantID);
+            if (rs.next()) {
+                return rs.getDouble("AVG(Food_Rating)");
+            }
+            return 0;
+        } catch (Exception e) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("Exception is: " + e);
+            return 0;
+        }
     }
 
     // AppStaff Login - Benz
     public AppStaff appStaffLogin(String email, String pass) throws SQLException, Exception {
-        System.out.println("Got sql");
         Statement st = conn.createStatement();
         ResultSet rs = st
                 .executeQuery("SELECT * FROM db.user U INNER JOIN db.appstaff A WHERE U.UserID = A.UserID AND " +
@@ -434,30 +1035,30 @@ public class DBManager {
 
     }
 
-    public Customer findCustomer(int customerID) {
-        try {
-            Statement st = conn.createStatement();
-            String fetch = "SELECT * FROM CUSTOMER WHERE CUSTOMER_ID = " + customerID;
-            ResultSet rs = st.executeQuery(fetch);
+    // public Customer findCustomer(int customerID) {
+    //     try {
+    //         Statement st = conn.createStatement();
+    //         String fetch = "SELECT * FROM CUSTOMER WHERE CUSTOMER_ID = " + customerID;
+    //         ResultSet rs = st.executeQuery(fetch);
 
-            while (rs.next()) {
-                Customer customer = new Customer(
-                        rs.getInt("Customer_ID"),
-                        rs.getLong("Card_Number"),
-                        rs.getDate("Card_Expiration"),
-                        rs.getInt("Card_Pin"),
-                        rs.getString("Card_Name"));
-                return customer;
-            }
-        }
+    //         while (rs.next()) {
+    //             Customer customer = new Customer(
+    //                     rs.getInt("Customer_ID"),
+    //                     rs.getLong("Card_Number"),
+    //                     rs.getDate("Card_Expiration"),
+    //                     rs.getInt("Card_Pin"),
+    //                     rs.getString("Card_Name"));
+    //             return customer;
+    //         }
+    //     }
 
-        catch (Exception e) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
-            System.out.println("Exception is: " + e);
-        }
-        return null;
+    //     catch (Exception e) {
+    //         Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, e);
+    //         System.out.println("Exception is: " + e);
+    //     }
+    //     return null;
 
-    }
+    // }
 
     public OrderItem createOrderItem(int orderID, int itemID, int quantity, String comment) {
 

@@ -5,18 +5,25 @@
         <title>Staff Login</title>
         <link rel="stylesheet" href="css/basic.css">
     </head>
+        <%
+            String error = "";
+            if (null != request.getAttribute("Fail")) {
+                error = (String) request.getAttribute("Fail");
+            }
+        %>
     <body>
         <h1>Staff Login</h1>
         <br/>
         <form action="StaffLoginServlet" method="post">
             <table>
+                <tr><label><%=error%></label></tr>
                 <tr>
                     <td><label>Email:</label></td>
                     <td><input type="text" name="email" required="true"></td>
                 </tr> 
                 <tr>
                     <td><label>Password:</label></td>
-                    <td><input type="text" name="password" required="true"></td>
+                    <td><input type="password" name="password" required="true"></td>
                 </tr> 
             </table> 
             <div class="center">

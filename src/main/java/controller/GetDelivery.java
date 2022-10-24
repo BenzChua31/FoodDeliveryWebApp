@@ -9,15 +9,22 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import com.google.gson.Gson;
+
 import dao.*;
-import model.Order;
+import model.OrderItem;
 import model.Delivery;
+import model.DeliveryDriver;
+import model.MenuItem;
+import model.Order;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 @WebServlet(name = "controller/GetDelivery", value = "/get-delivery")
 public class GetDelivery extends HttpServlet {
-    protected void processResquest(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         if (session.getAttribute("manager") == null) {
@@ -25,13 +32,13 @@ public class GetDelivery extends HttpServlet {
         }
         DBManager manager = (DBManager) session.getAttribute("manager");
 
-        int orderID = Integer.parseInt(request.getParameter("orderID"));
-        boolean API = Boolean.parseBoolean(request.getParameter("API"));
+        DeliveryDriver driver = (DeliveryDriver) session.getAttribute("driver");
 
-        if (API) {
-            Order order = manager.getOrder(orderID);
-            Delivery delivery = manager.getDelivery(orderID);
-            Data data = new Data(order, delivery);
+        try {
+            ArrayList<Delivery> assignedDeliveries = manager.getDeliveriesByDriverID(driver.getDriverID());
+            ArrayList<Delivery> availableDeliveries = manager.getAvailableDeliveries();
+
+            Data data = new Data(assignedDeliveries, availableDeliveries, manager);
 
             String json = new Gson().toJson(data);
             response.setContentType("application/json");
@@ -40,40 +47,53 @@ public class GetDelivery extends HttpServlet {
             out.print(json);
             out.flush();
             out.close();
-        } else {
-            request.setAttribute("orderID", orderID);
-            request.getRequestDispatcher("deliveryStatus.jsp").include(request, response);
+        } catch (Exception e) {
+            System.out.println("Exception is: " + e);
         }
     }
 
     private class Data {
-        private String status;
-        private String type;
-        private String street;
-        private String suburb;
-        private String state;
-        private String postal;
+        private ArrayList<ModifiedDelivery> assignedDeliveries;
+        private ArrayList<ModifiedDelivery> availableDeliveries;
 
-        private Data(Order order, Delivery delivery) {
-            this.status = order.getStatus();
-            this.type = order.getOrderType();
-            this.street = delivery.getDeliveryStreet();
-            this.suburb = delivery.getDeliverySuburb();
-            this.state = delivery.getDeliveryState();
-            this.postal = delivery.getDeliveryPostal();
+        private Data(ArrayList<Delivery> assignedDeliveries,
+                ArrayList<Delivery> availableDeliveries, DBManager manager) {
+            this.assignedDeliveries = new ArrayList<ModifiedDelivery>();
+            for (Delivery delivery : assignedDeliveries) {
+                String status = manager.getOrder(delivery.getOrderID()).getStatus();
+                if (!status.equals("Delivered")) {
+                    this.assignedDeliveries.add(new ModifiedDelivery(delivery, status));
+                }
+            }
+
+            this.availableDeliveries = new ArrayList<ModifiedDelivery>();
+            for (Delivery delivery : availableDeliveries) {
+                String status = manager.getOrder(delivery.getOrderID()).getStatus();
+                if (!status.equals("Delivered")) {
+                    this.availableDeliveries.add(new ModifiedDelivery(delivery, status));
+                }
+            }
         }
-    }
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processResquest(request, response);
-    }
+        private class ModifiedDelivery {
+            private int deliveryID;
+            private String status;
+            private String street;
+            private String suburb;
+            private String state;
+            private String postal;
+            private String instruction;
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processResquest(request, response);
+            public ModifiedDelivery(Delivery delivery, String status) {
+                this.deliveryID = delivery.getDeliveryID();
+                this.status = status;
+                this.street = delivery.getDeliveryStreet();
+                this.suburb = delivery.getDeliverySuburb();
+                this.state = delivery.getDeliveryState();
+                this.postal = delivery.getDeliveryPostal();
+                this.instruction = delivery.getDriverInstructions();
+            }
+        }
     }
 
     private void createManager(HttpServletRequest request, HttpServletResponse response) {

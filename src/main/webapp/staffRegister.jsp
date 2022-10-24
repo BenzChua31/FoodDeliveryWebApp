@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="css/basic.css">
     </head>
     <body>
-        <h1>Register</h1>
+        <h1>Staff Register</h1>
         <br/>
         <form action="StaffRegisterServlet" method="post">
             <table id="registerTable">
@@ -58,14 +58,6 @@
                     <td><label>Country</label>
                     <td><input type="text" name="country" required="true"></td>
                 </tr>
-                <tr>
-                    <td><label>Privilege</label>
-                    <td><input type="text" name="privilege" required="true"></td>
-                </tr>  
-                <tr>
-                    <td><label>Position</label>
-                    <td><input type="text" name="position" required="true"></td>
-                </tr> 
             </table> 
             <div class="center">
                 <input type ="submit" value="Sign Up">

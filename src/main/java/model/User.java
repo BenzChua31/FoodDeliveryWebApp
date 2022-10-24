@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class User {
 
@@ -11,6 +12,7 @@ public class User {
     private String email;
     private int phoneNo;
     private Date dob;
+    private LocalDate dob2;
     private int streetNo;
     private String streetName;
     private int postcode;
@@ -20,6 +22,7 @@ public class User {
     private Boolean activated;
 
     public User(){};
+    // uses Date
     public User(int userID, String fname, String lname, String pass,
                 String email, int phoneNo, Date dob, int streetNo, String streetName,
                 int postcode, String state, String suburb, String country, Boolean activated) {
@@ -30,6 +33,25 @@ public class User {
         this.email = email;
         this.phoneNo = phoneNo;
         this.dob = dob;
+        this.streetNo = streetNo;
+        this.streetName = streetName;
+        this.postcode = postcode;
+        this.state = state;
+        this.suburb = suburb;
+        this.country = country;
+        this.activated = activated;
+    }
+    // uses LocalDate
+    public User(int userID, String fname, String lname, String pass,
+                String email, int phoneNo, LocalDate dob, int streetNo, String streetName,
+                int postcode, String state, String suburb, String country, Boolean activated) {
+        this.UserID = userID;
+        this.fname = fname;
+        this.lname = lname;
+        this.pass = pass;
+        this.email = email;
+        this.phoneNo = phoneNo;
+        this.dob2 = dob;
         this.streetNo = streetNo;
         this.streetName = streetName;
         this.postcode = postcode;
@@ -96,6 +118,14 @@ public class User {
 
     public void setDob(Date dob) {
         this.dob = dob;
+    }
+
+    public LocalDate getDob2() {
+        return dob2;
+    }
+
+    public void setDob(LocalDate dob) {
+        this.dob2 = dob;
     }
 
     public int getStreetNo() {

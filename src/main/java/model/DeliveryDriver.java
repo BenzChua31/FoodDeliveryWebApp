@@ -7,14 +7,13 @@ public class DeliveryDriver extends User {
     private int userID;
     private String numberPlate;
     private String vehicleDescription;
-    private double rating;
     private String dAccountName;
     private int dBSB;
     private int dAccountNumber;
 
     public DeliveryDriver(int userID, String fname, String lname, String pass, String email, int phoneNo, Date date,
             int streetNo, String streetName, int postcode, String state, String suburb, String country,
-            boolean activated, int driverID, String numberPlate, String vehicleDescription, double rating,
+            boolean activated, int driverID, String numberPlate, String vehicleDescription,
             String dAccountName, int dBSB, int dAccountNumber) {
         super(userID, fname, lname, pass, email, phoneNo, date, streetNo, streetName, postcode, state, suburb, country,
                 activated);
@@ -22,7 +21,6 @@ public class DeliveryDriver extends User {
         this.userID = userID;
         this.numberPlate = numberPlate;
         this.vehicleDescription = vehicleDescription;
-        this.rating = rating;
         this.dAccountName = dAccountName;
         this.dBSB = dBSB;
         this.dAccountNumber = dAccountNumber;
@@ -58,14 +56,6 @@ public class DeliveryDriver extends User {
 
     public void setVehicleDescription(String vehicleDescription) {
         this.vehicleDescription = vehicleDescription;
-    }
-
-    public double getRating() {
-        return rating;
-    }
-
-    public void setRating(double rating) {
-        this.rating = rating;
     }
 
     public String getdAccountName() {

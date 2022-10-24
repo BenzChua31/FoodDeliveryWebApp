@@ -5,11 +5,18 @@
         <title>Welcome to the Register Page</title>
         <link rel="stylesheet" href="css/basic.css">
     </head>
+        <%
+            String error = "";
+            if (null != request.getAttribute("Error")) {
+                error = (String) request.getAttribute("Error");
+            }
+        %>
     <body>
         <h1>Register</h1>
         <br/>
         <form action="CustomerRegisterServlet" method="post">
             <table id="registerTable">
+                <tr><label><%=error%></label></tr>
                 <tr>
                     <td><label for="firstName">First Name:</label></td>
                     <td><input type="text" name="firstName" required="true"></td>
@@ -58,23 +65,6 @@
                     <td><label>Country</label>
                     <td><input type="text" name="country" required="true"></td>
                 </tr>
-                <tr>
-                    <td><label for="cardNumber">Card Number</label>
-                    <td><input type="text" name="cardNumber" required="true"></td>
-                </tr>  
-                <tr>
-                    <td><label>Card Expiration</label>
-                    <td><input type="date" name="cardExpiration" required="true"></td>
-                </tr> 
-                <tr>
-                    <td><label>Card Pin</label>
-                    <td><input type="text" name="cardPin" required="true"></td>
-                </tr> 
-                <tr>
-                    <td><label>Card Name</label>
-                    <td><input type="text" name="cardName" required="true"></td>
-                </tr> 
-
             </table> 
             <div class="center">
                 <input type ="submit" value="Sign Up">

@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="controller.*" %>
 <%@ page import="java.time.LocalDate" %>
@@ -16,6 +15,9 @@
 
         <title>Main Menu</title>
     </head>
+    <!--GETTING CUSTOMER AND STAFF OBJECTS-->
+    <% Staff staff = (Staff) session.getAttribute("Staff"); %>
+    <% Customer customer = (Customer) session.getAttribute("Customer"); %>
 
     <%-- If login as AppStaff, then AppStaff won't be null --%>
     <% AppStaff as = (AppStaff) session.getAttribute("appStaff"); %>
@@ -42,12 +44,24 @@
                     <!-- Use for R1 demo-->
                     <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/empManage/showEmp">Emp Management</a>
                     <%-- If not in manage mode, show the register/login etc... buttons, else only show management related buttons --%>
-                    <% if (!manageMode) { %>
+                    <% if (!manageMode) { 
+                        if (session.getAttribute("Customer") == null && session.getAttribute("Staff") == null) { %>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./customerLogin.jsp">Customer Login</a>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./customerRegister.jsp">Customer Register</a>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./staffLogin.jsp">Staff Login</a>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./staffRegister.jsp">Staff Register</a>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./order.jsp">Order</a>
+                        <% } else if (session.getAttribute("Customer") != null) { %>
+                            <!-- BUTTONS FOR CUSTOMER-->
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./customerEditDetails.jsp">Edit Details</a>
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./order.jsp">Order</a>
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./logout.jsp">Log Out</a>
+                        <% } else { %>
+                            <!-- BUTTONS FOR Staff-->
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./staffEditDetails.jsp">Edit Details</a>
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./order.jsp">Order</a>
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./logout.jsp">Log Out</a>
+                        <% } %>
                     <% } else { %>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="all-category">Manage Category</a>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="all-restaurant">Manage Restaurant</a>
@@ -103,12 +117,10 @@
             </div>
         </section>
         <script>
-
             function submitForm(resID) {
                 const form = document.getElementById("form" + resID);
                 form.submit();
             }
-
             // DO NOT DELETE BELOW
             // const search = document.querySelector("#search");
             // const searchForm = document.getElementById("searchForm");
@@ -136,7 +148,6 @@
             // function updateBlur(e) {
             //     localStorage.setItem("focus", "0");
             // }
-
         </script>
     </body>
 

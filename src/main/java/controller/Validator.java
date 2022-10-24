@@ -63,7 +63,7 @@ public class Validator implements Serializable {
         if (input == null) {
             return true;
         }
-        if (input.isBlank()) {
+        if (input.isEmpty()) {
             return true;
         }
         return false;
