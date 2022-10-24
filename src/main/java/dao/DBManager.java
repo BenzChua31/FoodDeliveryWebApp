@@ -947,8 +947,9 @@ public class DBManager {
         while (rs.next()) {
 
             temp.add(new Restaurant(
+                    rs.getInt("Restaurant_ID"),
                     rs.getString("Image_Reference"),
-                    rs.getString("Restaraunt_Name"),
+                    rs.getString("Restaurant_Name"),
                     rs.getInt("Street_Number"),
                     rs.getString("Street_Name"),
                     rs.getInt("Postcode"),

@@ -17,8 +17,8 @@
     <meta name="theme-color" content="#478ac9">
 
  <%
-    Staff staff = (Staff) session.getAttribute("staff");
-      MenuManagement me = staff.GetMenuManagement();
+      Restaurant resto = (Restaurant)session.getAttribute("currentResto");
+      MenuManagement me = resto.GetMenuManagement();
       List<Menu> menus = me.GetAllMenus();
       List<MenuCategory> categories = me.GetAllCategories();
       int categorySize = categories.size();
@@ -247,8 +247,8 @@ function OpenRemove() {
 
     <section class="u-clearfix u-section-1" id="sec-664f">
       <div class="u-clearfix u-sheet u-sheet-1">
-        <img class="u-expanded-width u-image u-image-round u-radius-25 u-image-1" src="images/testRestoImage.png" alt="test image" data-image-width="960" data-image-height="1280">
-        <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">Test Delicous Central</p>
+        <img class="u-expanded-width u-image u-image-round u-radius-25 u-image-1" src="images/<%=resto.getImageReference()%>" alt="test image" data-image-width="960" data-image-height="1280">
+        <p class="u-custom-font u-font-montserrat u-text u-text-default u-text-1"><%=resto.getRestaurantName()%></p>
          <!-- Buttons -->
         <div class="u-layout-grid u-list u-list-1">
           <div class="u-repeater u-repeater-1">
