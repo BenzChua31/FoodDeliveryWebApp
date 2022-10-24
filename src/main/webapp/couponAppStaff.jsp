@@ -282,8 +282,10 @@
                 <div class="nav navbar-light bg-light flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <button class="nav-link active" id="v-pills-create-tab" data-bs-toggle="pill" data-bs-target="#v-pills-create" type="button" role="tab" aria-controls="v-pills-create" aria-selected="true">Create Coupon</button>
                     <button class="nav-link" id="v-pills-list-tab" data-bs-toggle="pill" data-bs-target="#v-pills-list" type="button" role="tab" aria-controls="v-pills-list" aria-selected="false">Coupon Lists</button>
+                    <!-- -----------------------------------Incomplete -------------------
                     <button class="nav-link" id="v-pills-distribution-tab" data-bs-toggle="pill" data-bs-target="#v-pills-distribution" type="button" role="tab" aria-controls="v-pills-distribution" aria-selected="false" disabled>Distribute Coupon</button>
                     <button class="nav-link" id="v-pills-state-tab" data-bs-toggle="pill" data-bs-target="#v-pills-state" type="button" role="tab" aria-controls="v-pills-state" aria-selected="false" disabled>All Coupon State</button>
+                    -->
                 </div>
             </div>
             <div class="col-9">

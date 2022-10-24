@@ -66,7 +66,7 @@
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="all-category">Manage Category</a>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="all-restaurant">Manage Restaurant</a>
                         <%-- this button placement needs to be placed in individual restaurants page --%>
-                        <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="couponAppStaff.jsp.jsp">Coupon Management</a>
+                        <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="couponAppStaff.jsp">Coupon Management</a>
                     <% }
                     if (as != null) { %>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="manage-mode">
