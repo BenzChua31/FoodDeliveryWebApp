@@ -15,7 +15,8 @@ public class CouponServiceTest {
     {
         SqlSession sqlSession = SqlSessionUtil.openSqlSession();
         CouponService couponServiceImpl = new CouponServiceImpl();
-        couponServiceImpl.addCoupon("as", "Specific store", "1,2,3", "", "23.23", "20.1", "sad", "images/no-photo-available.jpeg");
+        couponServiceImpl.addCoupon("as", "Specific items in specific store", "1", "1,2,3", "23.23", "20.1", "sad", "images/no-photo-available.jpeg");
         SqlSessionUtil.close(sqlSession);
-    }*/
+    }
+    */
 }

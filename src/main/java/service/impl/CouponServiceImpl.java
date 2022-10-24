@@ -19,6 +19,9 @@ public class CouponServiceImpl implements CouponService{
     public List<MenuItem> itemInfo(int resId) { return SqlSessionUtil.openSqlSession().getMapper(CouponMapper.class).selectItemInfoByResId(resId); }
 
     @Override
+    public List<Coupon> getCoupons() { return SqlSessionUtil.openSqlSession().getMapper(CouponMapper.class).selectAll(); }
+
+    @Override
     public Boolean addCoupon(String name, String scope, String resId, String itemId, String minMoney, String value, String description, String image) {
         int intScope = 0;
         if (scope.equals("Specific store"))
@@ -38,7 +41,7 @@ public class CouponServiceImpl implements CouponService{
                         cMapper.insertCouponR(couponId, Integer.parseInt(resIds[i]));
                     break;
                 case 2:
-                    cMapper.insertCouponItem(coupon.getCouponId(), Integer.parseInt(resId));
+                    cMapper.insertCouponR(couponId, Integer.parseInt(resId));
                     String[] items = itemId.split(",");
                     for (int i = 0; i < items.length; i++)
                         cMapper.insertCouponItem(couponId, Integer.parseInt(items[i]));

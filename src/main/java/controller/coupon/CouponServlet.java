@@ -34,6 +34,12 @@ public class CouponServlet extends HttpServlet {
             doFindRes(request, response);
         if (servletPath.equals("/coupon/findItems"))
             doFindItems(request, response);
+        if (servletPath.equals("/coupon/showCoupons"))
+            doShowCoupons(request, response);
+    }
+
+    private void doShowCoupons(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        response.getWriter().print(new Gson().toJson(couponService.getCoupons()));
     }
 
     private void doFindItems(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{

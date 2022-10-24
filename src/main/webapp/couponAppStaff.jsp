@@ -11,6 +11,7 @@
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
             crossorigin="anonymous">
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/sl-1.4.0/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.12.1/b-2.2.3/b-colvis-2.2.3/sl-1.4.0/datatables.min.js"></script>
     <%-- Dynamically set the base path for the entire page --%>
@@ -35,9 +36,34 @@
                 }, false)
             })
         }
-        //------------------------------------------
+        function formClear()
+        {
+            $("#create-form").trigger("reset");
+            $("#create-form").removeClass("was-validated");
+        }
+
+        function showCouponsToDataTable()
+        {
+            let dt = $("#coupon-list-table").DataTable();
+            dt.clear().draw();
+            $.ajax({
+                type : "get",
+                url : "coupon/showCoupons",
+                data : "t=" + Date.parse(new Date()),
+                async: true,
+                success: (jsonStr)=>{
+                    let dt = $("#coupon-list-table").DataTable();
+                    let jsonObj = $.parseJSON(jsonStr)
+                    for (let i = 0; i < jsonObj.length; i++)
+                        dt.row.add([jsonObj[i].couponId, jsonObj[i].couponName, jsonObj[i].couponScope, jsonObj[i].couponMinMoney, jsonObj[i].couponValue, jsonObj[i].createdDate, jsonObj[i].couponDescription]).draw();
+                }
+            })
+        }
+//--------------------------onload event------------------------------------------
         $(()=>{
+        //----------add form validation-----------------------------------------
             formValidation();
+        //-----------------------------------datatable setting------------------------
             $(".multi-datatable").DataTable(
                 {
                     select: {
@@ -46,19 +72,50 @@
                     dom: 'Bfrtip',
                     buttons: [
                         'selectAll',
-                        'selectNone'
+                        'spacer',
+                        'selectNone',
                     ]
                 }
             )
 
-            //Register buttons click event
+            $("#coupon-list-table").DataTable(
+                {
+                    select: {
+                        style: "multi"
+                    },
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'selectAll',
+                        'spacer',
+                        'selectNone',
+                        'spacer',
+                        {
+                            text: "Refresh",
+                            className: "btn btn-info",
+                            action: function (e, dt, node, config){
+                                showCouponsToDataTable();
+                            }
+                        },
+                        'spacer',
+                        {
+                            text: "Delete",
+                            className: "btn btn-danger",
+                            action: function (e, dt, node, config){
+
+                            }
+                        }
+                    ]
+                }
+            )
+        //--------------------Register buttons click event------------------------------------------------------
             $("#page-close-btn").on('click', ()=>{
                 location.href = "index.jsp";
             })
 
+            /* abandon
             $("#v-pills-create-tab").on('click', ()=>{
                 $("#create-form").removeClass('was-validated');
-            });
+            });*/
 
             $("#res-select-btn").on('click', ()=>{
                 let dt = $("#res-table").DataTable();
@@ -118,6 +175,11 @@
                 $("#inputScopeItem").val(content.substring(0, content.length - 1));
             })
 
+            $("#create-clear-btn").on('click', formClear)
+
+            $("#v-pills-list-tab").on('click', showCouponsToDataTable)
+
+        //----------------Scope select text change event----------------------------------------------------------
             $("#inputCouponScope").change(()=>{
                 const selectOption = $("#inputCouponScope option:selected");
                 if (selectOption.val() == "Specific store")
@@ -146,32 +208,35 @@
                     $("#inputScopeItem").attr('required', true);
                 }
             })
-            //Form submit event
+         //-----------------------------------Form submit event------------------------------
             $("#create-form").on("submit", (e)=>{
-                e.preventDefault();
-                $.ajax({
-                    type : "post",
-                    url : "coupon/create",
-                    data : {
-                        cName: $("#inputCouponName").val(),
-                        cScope: $("#inputCouponScope").val(),
-                        resId: $("#inputScopeRes").val(),
-                        itemId: $("#inputScopeItem").val(),
-                        minMoney: $("#inputCouponMoney").val(),
-                        value: $("#inputCouponValue").val(),
-                        description: $("#inputCouponDescription").val()
-                    },
-                    async: false,
-                    success: ()=>{
-                        $("#create-success-alert").fadeIn();
-                        $("#create-success-alert").fadeOut(2000);
-                        $("#v-pills-create-tab").trigger("click");
-                    },
-                    error: ()=>{
-                        $("#create-falied-alert").fadeIn();
-                        $("#create-falied-alert").fadeOut(2000);
-                    }
-                })
+                if (document.forms["create-form"].reportValidity())
+                {
+                    e.preventDefault();
+                    $.ajax({
+                        type : "post",
+                        url : "coupon/create",
+                        data : {
+                            cName: $("#inputCouponName").val(),
+                            cScope: $("#inputCouponScope").val(),
+                            resId: $("#inputScopeRes").val(),
+                            itemId: $("#inputScopeItem").val(),
+                            minMoney: $("#inputCouponMoney").val(),
+                            value: $("#inputCouponValue").val(),
+                            description: $("#inputCouponDescription").val()
+                        },
+                        async: false,
+                        success: ()=>{
+                            $("#create-success-alert").fadeIn();
+                            $("#create-success-alert").fadeOut(2000);
+                            formClear();
+                        },
+                        error: ()=>{
+                            $("#create-falied-alert").fadeIn();
+                            $("#create-falied-alert").fadeOut(2000);
+                        }
+                    })
+                }
             });
         })
     </script>
@@ -201,6 +266,7 @@
             </div>
             <div class="col-9">
                 <div class="tab-content" id="v-pills-tabContent">
+                    <!---------------------------------------- Create From -------------------------------------------------------->
                     <div class="tab-pane fade show active" id="v-pills-create" role="tabpanel" aria-labelledby="v-pills-create-tab" tabindex="0">
                         <!-- successful alert -->
                         <div class="alert alert-success" style="display:none" id="create-success-alert">Create Successful!</div>
@@ -292,10 +358,37 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Create</button>
+                            <br><br>
+                            <div class="row mb-3">
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-secondary" id="create-clear-btn">Clear</button>
+                                </div>
+                                <div class="col-sm-5">
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                </div>
+                            </div>
                         </form>
                     </div>
-                    <div class="tab-pane fade" id="v-pills-list" role="tabpanel" aria-labelledby="v-pills-list-tab" tabindex="0">list</div>
+                    <!----------------------------------- Show Coupon List --------------------------------------------------------------->
+                    <div class="tab-pane fade" id="v-pills-list" role="tabpanel" aria-labelledby="v-pills-list-tab" tabindex="0">
+                        <table id="coupon-list-table" class="table table-striped" style="width: 100%">
+                            <caption style="caption-side: top">Coupon Lists</caption>
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Scope</th>
+                                <th>Min Money</th>
+                                <th>Value</th>
+                                <th>Created Date</th>
+                                <th>Description</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!----------------------------------------- Unfinished features ------------------------------------------------------->
                     <div class="tab-pane fade" id="v-pills-distribution" role="tabpanel" aria-labelledby="v-pills-distribution-tab" tabindex="0">distribute</div>
                     <div class="tab-pane fade" id="v-pills-state" role="tabpanel" aria-labelledby="v-pills-state-tab" tabindex="0">state</div>
                 </div>
