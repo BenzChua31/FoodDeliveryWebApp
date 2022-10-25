@@ -45,11 +45,11 @@
                     <%-- If not in manage mode, show the register/login etc... buttons, else only show management related buttons --%>
                     <% if (!manageMode) {
                         if (session.getAttribute("Customer") == null && session.getAttribute("Staff") == null) { %>
-                        <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./customerLogin.jsp">Customer Login</a>
-                        <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./customerRegister.jsp">Customer Register</a>
-                        <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./staffLogin.jsp">Staff Login</a>
-                        <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./staffRegister.jsp">Staff Register</a>
-                        <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./order.jsp">Order</a>
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./customerLogin.jsp">Customer Login</a>
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./customerRegister.jsp">Customer Register</a>
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./staffLogin.jsp">Staff Login</a>
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./staffRegister.jsp">Staff Register</a>
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./order.jsp">Order</a>
                         <% } else if (session.getAttribute("Customer") != null) { %>
                             <!-- BUTTONS FOR CUSTOMER-->
                             <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./customerEditDetails.jsp">Edit Details</a>
@@ -71,6 +71,7 @@
                     if (as != null) { %>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="manage-mode">
                             <%= (manageMode) ? "Exit Mode" : "Manage Mode"%>
+                            <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./logout.jsp">AS LogOut</a>
                         </a>
                     <% } %>
                 </div>

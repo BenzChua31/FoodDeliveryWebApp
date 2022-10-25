@@ -41,7 +41,7 @@
                     <% if (!manageMode) { %>
                         <label>LOGGED IN AS: <%=staff.getEmail()%></label>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./staffEditDetails.jsp">Edit Details</a>
-                        <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="./index.jsp">Logout</a>
+                        <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="index">Logout</a>
                     <% } else { %>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="manageCat.jsp">Manage Category</a>
                         <a class="btn text-dark ms-2 text-decoration-none btn-outline-success" href="empManagement.jsp">Emp Management</a>
