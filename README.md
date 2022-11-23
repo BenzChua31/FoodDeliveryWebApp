@@ -4,6 +4,8 @@ UTS - Advanced Software Development Group Project
 Food Delivery Web Application that provides an online medium for customers
 to order from restaurants and restaurant owners to sell food
 
+This project primarily focuses on the use of Azure DevOps
+
 **_Tools Used:_**
 Azure DevOps, Azure, HTML, CSS, JS, Bootstrap, Java, MySQL, IntelliJ
 
