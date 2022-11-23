@@ -48,7 +48,8 @@ azure-pipelines.yml - CI/CD pipeline
 src/main/java/controller/rms - All restaurant and restaurant category related servlets  
 src/main/java/controller/AppStaffLoginServlet - Corporate staff login  
 src/main/java/controller/IndexServlet - Home page   
-src/main/java/controller/ConnServlet - Database connection initializer  
+src/main/java/controller/ConnServlet - Database connection initializer 
+src/main/java/controller/Validator - Validator for Controllers 
 src/main/java/dao/* - MySQL database connection initializer, SQL statements  
 db - For database and table population and deletion  
 pom.xml - For all dependencies  
