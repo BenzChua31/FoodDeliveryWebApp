@@ -1,5 +1,5 @@
 # Food-Delivery-System-AdvSoftDev-
-UTS - Advanced Software Development Group Project 
+UTS - Advanced Software Development Group of 6 Project 
 
 Food Delivery Web Application that provides an online medium for customers
 to order from restaurants and restaurant owners to sell food
