@@ -45,7 +45,7 @@ Other Amazing Features by My Team Members:
 **Source Code for my Features**
 
 azure-pipelines.yml - CI/CD pipeline  
-src/main/java/controller/rms - All restaurant and restaurant category related servlets  
+src/main/java/controller/rms/* - All restaurant and restaurant category related servlets  
 src/main/java/controller/AppStaffLoginServlet - Corporate staff login  
 src/main/java/controller/IndexServlet - Home page   
 src/main/java/controller/ConnServlet - Database connection initializer   
